@@ -10,11 +10,21 @@ DBHandler::DBHandler()
 
     QByteArray raw_data = m_pFile->readAll();
 
-    m_pDocument = std::make_unique<QJsonDocument>(QJsonDocument::fromJson(raw_data));
-    m_pObject = m_pDocument->object();
+    m_document = QJsonDocument::fromJson(raw_data);
+    m_object = m_document.object();
+}
+
+DBHandler::~DBHandler()
+{
+    m_pFile->close();
 }
 
 QJsonObject& DBHandler::getJsonObject()
 {
-    return m_pObject;
+    return m_object;
+}
+
+QJsonDocument& DBHandler::getJsonDocument()
+{
+    return m_document;
 }
