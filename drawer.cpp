@@ -258,6 +258,17 @@ void Drawer::saveChange()
     client_awarness->setVisible(true);
     client_awarness_edit->setVisible(false);
 
+    if(client_awarness_edit->currentIndex() == 0)
+    {
+        QPixmap map = QPixmap::fromImage(QImage(":/image/check_ico.png"));
+        client_awarness->setPixmap(map);
+    }
+    else
+    {
+        QPixmap map = QPixmap::fromImage(QImage(":/image/cross_ico.png"));
+        client_awarness->setPixmap(map);
+    }
+
     name->setFrame(false);
     name->setReadOnly(true);
     name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
