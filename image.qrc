@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/image">
+        <file alias="cross_ico.png">cross.png</file>
+        <file alias="check_ico.png">check.png</file>
+        <file alias="logo.ico">jks.ico</file>
+    </qresource>
+</RCC>
