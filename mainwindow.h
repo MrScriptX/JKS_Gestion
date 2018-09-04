@@ -29,8 +29,10 @@ private:
     void setupWindow();
 
     std::vector<QPushButton*> m_drawers;
+    std::vector<DrawerData> m_drawers_data;
     std::unique_ptr<Drawer> m_drawer;
-    std::shared_ptr<DBHandler> m_DBHandler;
+
+    DBHandler handler;
 };
 
 #endif // MAINWINDOW_H

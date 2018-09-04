@@ -6,6 +6,9 @@
 #include <QJsonObject>
 
 #include <memory>
+#include <iostream>
+
+#include "drawerdata.h"
 
 class DBHandler
 {
@@ -16,10 +19,13 @@ public:
     QJsonObject& getJsonObject();
     QJsonDocument& getJsonDocument();
     QFile& getFile();
+
+    void loadAll(std::vector<DrawerData>& datas);
+    void saveAll(std::vector<DrawerData>& datas);
+
 private:
-    QFile m_file;
-    QJsonDocument m_document;
-    QJsonObject m_object;
+
+    const QString FILE_NAME = "data.json";
 };
 
 #endif // DBHANDLER_H

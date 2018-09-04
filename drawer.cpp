@@ -193,79 +193,37 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     setLayout(window);
 }
 
-void Drawer::setup(const int& id, std::shared_ptr<DBHandler> db)
+void Drawer::setup(const int& id, DrawerData& data)
 {
-    m_pDBHandler = db;
+    m_data = &data;
     m_id = id;
 }
 
-void Drawer::loadData(const QJsonObject& json)
+void Drawer::loadData(const DrawerData& data)
 {
-    if(json.contains("status") && json["status"].isDouble())
+    status->setCurrentIndex(data.getStatus());
+    if(data.getClient_awarness() == 0)
     {
-        status->setCurrentIndex(json["status"].toInt());
+        QPixmap image = QPixmap::fromImage(QImage(":/image/check_ico.png"));
+        client_awarness->setPixmap(image);
+        client_awarness_edit->setCurrentIndex(0);
+    }
+    else
+    {
+        QPixmap image = QPixmap::fromImage(QImage(":/image/cross_ico.png"));
+        client_awarness->setPixmap(image);
+        client_awarness_edit->setCurrentIndex(1);
     }
 
-    if(json.contains("name") && json["name"].isString())
-    {
-        name->setText(json["name"].toString());
-    }
-
-    if(json.contains("surname") && json["surname"].isString())
-    {
-        surname->setText(json["surname"].toString());
-    }
-
-    if(json.contains("contact") && json["contact"].isString())
-    {
-        contact->setText(json["contact"].toString());
-    }
-
-    if(json.contains("deposit date") && json["deposit date"].isString())
-    {
-        deposit_date->setText(json["deposit date"].toString());
-    }
-
-    if(json.contains("breakdown") && json["breakdown"].isString())
-    {
-        breakdown->setText(json["breakdown"].toString());
-    }
-
-    if(json.contains("complementary_info") && json["complementary_info"].isString())
-    {
-        complement_info->setText(json["complementary_info"].toString());
-    }
-
-    if(json.contains("repairs") && json["repairs"].isString())
-    {
-        repair->setText(json["repairs"].toString());
-    }
-
-    if(json.contains("comments") && json["comments"].isString())
-    {
-        comments->setText(json["comments"].toString());
-    }
-
-    if(json.contains("price") && json["price"].isString())
-    {
-        price->setText(json["price"].toString());
-    }
-
-    if(json.contains("client aware") && json["client aware"].isDouble())
-    {
-        if(json["client aware"].toInt() == 0)
-        {
-            QPixmap image = QPixmap::fromImage(QImage(":/image/check_ico.png"));
-            client_awarness->setPixmap(image);
-            client_awarness_edit->setCurrentIndex(0);
-        }
-        else
-        {
-            QPixmap image = QPixmap::fromImage(QImage(":/image/cross_ico.png"));
-            client_awarness->setPixmap(image);
-            client_awarness_edit->setCurrentIndex(1);
-        }
-    }
+    name->setText(data.getName());
+    surname->setText(data.getSurname());
+    contact->setText(data.getContact());
+    deposit_date->setText(data.getDeposit_date());
+    breakdown->setText(data.getBreakdown());
+    complement_info->setText(data.getComplementary_info());
+    repair->setText(data.getRepairs());
+    comments->setText(data.getComments());
+    price->setText(data.getPrice());
 }
 
 void Drawer::saveChange()
@@ -284,25 +242,17 @@ void Drawer::saveChange()
         break;
     }
 
-    QJsonObject content;
-    content["status"] = status->currentIndex();
-    content["client aware"] = client_awarness_edit->currentIndex();
-    content["name"] = name->text();
-    content["surname"] = surname->text();
-    content["contact"] = contact->text();
-    content["deposit date"] = deposit_date->text();
-    content["breakdown"] = breakdown->toPlainText();
-    content["complementary_info"] = complement_info->toPlainText();
-    content["repairs"] = repair->toPlainText();
-    content["comments"] = comments->toPlainText();
-    content["price"] = price->text();
-
-    QJsonObject file_object;
-    file_object[QString::number(m_id)] = content;
-    loadData(content);
-
-    m_pDBHandler->getJsonDocument().setObject(file_object);
-    m_pDBHandler->getFile().write(m_pDBHandler->getJsonDocument().toJson());
+    m_data->setStatus(status->currentIndex());
+    m_data->setClient_awarness(client_awarness_edit->currentIndex());
+    m_data->setName(name->text());
+    m_data->setSurname(surname->text());
+    m_data->setContact(contact->text());
+    m_data->setDeposit_date(deposit_date->text());
+    m_data->setBreakdown(breakdown->toPlainText());
+    m_data->setComplementary_info(complement_info->toPlainText());
+    m_data->setRepairs(repair->toPlainText());
+    m_data->setComments(comments->toPlainText());
+    m_data->setPrice(price->text());
 
     status->setEnabled(false);
     client_awarness->setVisible(true);
@@ -370,7 +320,7 @@ void Drawer::discardChange()
     }
 
 
-    loadData(m_pDBHandler->getJsonObject()[QString::number(m_id)].toObject());
+    loadData(*m_data);
 
     status->setEnabled(false);
     client_awarness->setVisible(true);

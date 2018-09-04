@@ -2,34 +2,78 @@
 
 DBHandler::DBHandler()
 {
-    m_file.setFileName("data.json");
-    if(!m_file.open(QIODevice::ReadWrite))
-    {
-        qWarning("Failed to open data.json !");
-    }
 
-    QByteArray raw_data = m_file.readAll();
-
-    m_document = QJsonDocument::fromJson(raw_data);
-    m_object = m_document.object();
 }
 
 DBHandler::~DBHandler()
 {
-    m_file.close();
+
 }
 
-QJsonObject& DBHandler::getJsonObject()
+void DBHandler::loadAll(std::vector<DrawerData>& datas)
 {
-    return m_object;
+    QFile file(FILE_NAME);
+    if(!file.open(QIODevice::ReadWrite))
+    {
+        qWarning("Failed to open the file for reading !");
+    }
+
+    QByteArray raw_data = file.readAll();
+    QJsonDocument document = QJsonDocument::fromJson(raw_data);
+    QJsonObject object = document.object();
+
+    for(int i = 0; i < 41; i++)
+    {
+        DrawerData data;
+        QString id = QString::number(i);
+
+        if(object.contains(id) && object[id].isObject())
+        {
+            QJsonObject json = object[id].toObject();
+            if(json.contains("status") && json["status"].isDouble())
+            {
+                data.setStatus(json["status"].toInt());
+            }
+
+            if(json.contains("name") && json["name"].isString())
+            {
+                data.setName(json["name"].toString());
+            }
+
+            if(json.contains("surname") && json["surname"].isString())
+            {
+                data.setSurname(json["surname"].toString());
+            }
+        }
+
+        datas.push_back(data);
+    }
+
+    file.close();
 }
 
-QJsonDocument& DBHandler::getJsonDocument()
+void DBHandler::saveAll(std::vector<DrawerData>& datas)
 {
-    return m_document;
-}
+    QFile file(FILE_NAME);
+    if(!file.open(QIODevice::ReadWrite))
+    {
+        qWarning("Failed to open the file for reading !");
+    }
 
-QFile& DBHandler::getFile()
-{
-    return m_file;
+    QJsonObject object;
+    for(uint i = 0; i < datas.size(); i++)
+    {
+        QString id = QString::number(i);
+        QJsonObject json;
+        json["status"] = datas[i].getStatus();
+        json["name"] = datas[i].getName();
+        json["surname"] = datas[i].getSurname();
+
+        object[id] = json;
+    }
+
+    QJsonDocument document(object);
+    file.write(document.toJson());
+
+    file.close();
 }

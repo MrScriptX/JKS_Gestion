@@ -5,12 +5,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     drawer.cpp \
-    dbhandler.cpp
+    dbhandler.cpp \
+    drawerdata.cpp
 
 HEADERS += \
     mainwindow.h \
     drawer.h \
-    dbhandler.h
+    dbhandler.h \
+    drawerdata.h
 
 RESOURCES += \
     image.qrc

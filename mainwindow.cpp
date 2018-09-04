@@ -2,8 +2,6 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-    m_DBHandler = std::make_shared<DBHandler>();
-
     setWindowTitle("JKS Gestion");
     setMinimumWidth(800);
     setMinimumHeight(800);
@@ -13,27 +11,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 void MainWindow::setupWindow()
 {
+    if(!m_drawers_data.empty())
+    {
+        m_drawers_data.clear();
+    }
+
+    handler.loadAll(m_drawers_data);
+
     for(uint32_t i = 0; i < 41; i++)
     {
         QString name;
         QString surname;
         Status status = Status::EMPTY;
 
-        QJsonObject json = m_DBHandler->getJsonObject()[QString::number(i)].toObject();
-        if(json.contains("name") && json["name"].isString())
-        {
-            name = json["name"].toString();
-        }
-
-        if(json.contains("surname") && json["surname"].isString())
-        {
-            surname = json["surname"].toString();
-        }
-
-        if(json.contains("status") && json["status"].isDouble())
-        {
-            status = static_cast<Status>(json["status"].toInt());
-        }
+        name = m_drawers_data[i].getName();
+        surname = m_drawers_data[i].getSurname();
+        status = static_cast<Status>(m_drawers_data[i].getStatus());
 
 
         QString client;
@@ -104,8 +97,8 @@ void MainWindow::openDrawer(uint32_t i)
     }
 
     m_drawer = std::make_unique<Drawer>(nullptr);
-    m_drawer->setup(static_cast<int>(i), m_DBHandler);
-    m_drawer->loadData(m_DBHandler->getJsonObject()[QString::number(i)].toObject());
+    m_drawer->setup(static_cast<int>(i), m_drawers_data[i]);
+    m_drawer->loadData(m_drawers_data[i]);
     m_drawer->show();
 
     connect(m_drawer.get(), SIGNAL(updated()), this, SLOT(updateMain()));
@@ -113,6 +106,17 @@ void MainWindow::openDrawer(uint32_t i)
 
 void MainWindow::updateMain()
 {
+    QString err = m_drawers_data[1].getName();
+    if(err == "cecile")
+    {
+        qWarning("true");
+    }
+    else
+    {
+        qWarning("false");
+    }
+
+    handler.saveAll(m_drawers_data);
     m_drawers.clear();
     setupWindow();
     update();
