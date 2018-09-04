@@ -38,7 +38,7 @@ void MainWindow::setupWindow()
         }
         else
         {
-            client = name + " " + surname;
+            client = surname + " " + name;
         }
         //end temp
 
