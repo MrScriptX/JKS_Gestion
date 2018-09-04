@@ -10,6 +10,7 @@
 #include <QJsonDocument>
 
 #include "drawer.h"
+#include "dbhandler.h"
 
 class MainWindow : public QMainWindow
 {
@@ -28,7 +29,10 @@ private:
     void setupWindow();
 
     std::vector<QPushButton*> m_drawers;
+    std::vector<DrawerData> m_drawers_data;
     std::unique_ptr<Drawer> m_drawer;
+
+    DBHandler handler;
 };
 
 #endif // MAINWINDOW_H
