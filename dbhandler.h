@@ -11,11 +11,15 @@ class DBHandler
 {
 public:
     DBHandler();
+    ~DBHandler();
 
+    QJsonObject& getJsonObject();
+    QJsonDocument& getJsonDocument();
+    QFile& getFile();
 private:
-    std::unique_ptr<QFile> m_pFile;
-    std::unique_ptr<QJsonDocument> m_pDocument;
-    std::unique_ptr<QJsonObject> m_pObject;
+    QFile m_file;
+    QJsonDocument m_document;
+    QJsonObject m_object;
 };
 
 #endif // DBHANDLER_H

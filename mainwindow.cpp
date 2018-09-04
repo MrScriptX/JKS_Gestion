@@ -2,6 +2,8 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
+    m_DBHandler = std::make_shared<DBHandler>();
+
     setWindowTitle("JKS Gestion");
     setMinimumWidth(800);
     setMinimumHeight(800);
@@ -17,17 +19,7 @@ void MainWindow::setupWindow()
         QString surname;
         Status status = Status::EMPTY;
 
-        QString file_name = QString::number(static_cast<int>(i)) + ".json";
-        QFile file(file_name);
-        if(!file.open(QIODevice::ReadOnly))
-        {
-            qWarning("Failed to open file for data reading : MainWindow::openDrawer");
-        }
-        QByteArray raw_data = file.readAll();
-        QJsonDocument doc = QJsonDocument::fromJson(raw_data);
-        QJsonObject doc_object = doc.object();
-
-        QJsonObject json = doc_object[QString::number(i)].toObject();
+        QJsonObject json = m_DBHandler->getJsonObject()[QString::number(i)].toObject();
         if(json.contains("name") && json["name"].isString())
         {
             name = json["name"].toString();
@@ -74,8 +66,6 @@ void MainWindow::setupWindow()
 
         m_drawers.push_back(drawer);
         connect(m_drawers[i], &QPushButton::clicked, this, [&, i]() { openDrawer(i); });
-
-        file.close();
     }
 
     QGridLayout* layout = new QGridLayout;
@@ -113,24 +103,12 @@ void MainWindow::openDrawer(uint32_t i)
         m_drawer.reset();
     }
 
-    QString file_name = QString::number(static_cast<int>(i)) + ".json";
-    QFile file(file_name);
-    if(!file.open(QIODevice::ReadOnly))
-    {
-        qWarning("Failed to open file for data reading : MainWindow::openDrawer");
-    }
-    QByteArray raw_data = file.readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(raw_data);
-    QJsonObject doc_object = doc.object();
-
     m_drawer = std::make_unique<Drawer>(nullptr);
-    m_drawer->loadData(doc_object[QString::number(i)].toObject());
-    m_drawer->setID(static_cast<int>(i));
+    m_drawer->setup(static_cast<int>(i), m_DBHandler);
+    m_drawer->loadData(m_DBHandler->getJsonObject()[QString::number(i)].toObject());
     m_drawer->show();
 
     connect(m_drawer.get(), SIGNAL(updated()), this, SLOT(updateMain()));
-
-    file.close();
 }
 
 void MainWindow::updateMain()

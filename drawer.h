@@ -17,6 +17,8 @@
 
 #include <memory>
 
+#include "dbhandler.h"
+
 
 enum Status
 {
@@ -39,7 +41,7 @@ class Drawer : public QWidget
 public:
     explicit Drawer(QWidget *parent = nullptr);
 
-    void setID(const int& id);
+    void setup(const int& id, std::shared_ptr<DBHandler> db);
     void loadData(const QJsonObject& json);
 
 signals:
@@ -70,6 +72,8 @@ private:
     QPushButton* modify;
     QPushButton* save;
     QPushButton* discard;
+
+    std::shared_ptr<DBHandler> m_pDBHandler;
 };
 
 #endif // DRAWER_H

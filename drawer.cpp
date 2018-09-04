@@ -193,8 +193,9 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     setLayout(window);
 }
 
-void Drawer::setID(const int& id)
+void Drawer::setup(const int& id, std::shared_ptr<DBHandler> db)
 {
+    m_pDBHandler = db;
     m_id = id;
 }
 
@@ -283,13 +284,6 @@ void Drawer::saveChange()
         break;
     }
 
-    QString file_name = QString::number(m_id) + ".json";
-    QFile file(file_name);
-    if(!file.open(QIODevice::WriteOnly))
-    {
-        qWarning("Failed to open save.json");
-    }
-
     QJsonObject content;
     content["status"] = status->currentIndex();
     content["client aware"] = client_awarness_edit->currentIndex();
@@ -307,10 +301,8 @@ void Drawer::saveChange()
     file_object[QString::number(m_id)] = content;
     loadData(content);
 
-    QJsonDocument doc(file_object);
-    file.write(doc.toJson());
-
-    file.close();
+    m_pDBHandler->getJsonDocument().setObject(file_object);
+    m_pDBHandler->getFile().write(m_pDBHandler->getJsonDocument().toJson());
 
     status->setEnabled(false);
     client_awarness->setVisible(true);
@@ -377,20 +369,8 @@ void Drawer::discardChange()
         break;
     }
 
-    QString file_name = QString::number(m_id) + ".json";
-    QFile file(file_name);
-    if(!file.open(QIODevice::ReadOnly))
-    {
-        qWarning("Failed to save change!");
-    }
 
-    QByteArray file_data = file.readAll();
-    QJsonDocument save_file(QJsonDocument::fromJson(file_data));
-    QJsonObject file_object = save_file.object();
-
-    loadData(file_object[QString::number(m_id)].toObject());
-
-    file.close();
+    loadData(m_pDBHandler->getJsonObject()[QString::number(m_id)].toObject());
 
     status->setEnabled(false);
     client_awarness->setVisible(true);
