@@ -9,8 +9,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setupWindow();
 }
 
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu menu(this);
+    menu.addAction(m_reset);
+    menu.exec(event->globalPos());
+}
+
 void MainWindow::setupWindow()
 {
+    m_reset = new QAction;
+    m_reset->setText("reset");
+
     if(!m_drawers_data.empty())
     {
         m_drawers_data.clear();
@@ -120,4 +130,9 @@ void MainWindow::updateMain()
     m_drawers.clear();
     setupWindow();
     update();
+}
+
+void MainWindow::reset()
+{
+
 }

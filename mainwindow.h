@@ -8,6 +8,9 @@
 #include <vector>
 #include <QFile>
 #include <QJsonDocument>
+#include <QMenu>
+#include <QAction>
+#include <QContextMenuEvent>
 
 #include "drawer.h"
 #include "dbhandler.h"
@@ -18,12 +21,15 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
-
+    void contextMenuEvent(QContextMenuEvent* event) override;
 signals:
 
 public slots:
     void openDrawer(uint32_t i);
     void updateMain();
+
+private slots:
+    void reset();
 
 private:
     void setupWindow();
@@ -33,6 +39,8 @@ private:
     std::unique_ptr<Drawer> m_drawer;
 
     DBHandler handler;
+
+    QAction* m_reset;
 };
 
 #endif // MAINWINDOW_H
