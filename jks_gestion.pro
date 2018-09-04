@@ -4,11 +4,13 @@ QT += core
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    drawer.cpp
+    drawer.cpp \
+    dbhandler.cpp
 
 HEADERS += \
     mainwindow.h \
-    drawer.h
+    drawer.h \
+    dbhandler.h
 
 RESOURCES += \
     image.qrc
