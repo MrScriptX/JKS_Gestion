@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 void MainWindow::setupWindow()
 {
+    m_reset = new QAction;
+    m_reset->setText("reset");
+
     if(!m_drawers_data.empty())
     {
         m_drawers_data.clear();
@@ -106,16 +109,6 @@ void MainWindow::openDrawer(uint32_t i)
 
 void MainWindow::updateMain()
 {
-    QString err = m_drawers_data[1].getName();
-    if(err == "cecile")
-    {
-        qWarning("true");
-    }
-    else
-    {
-        qWarning("false");
-    }
-
     handler.saveAll(m_drawers_data);
     m_drawers.clear();
     setupWindow();
