@@ -45,6 +45,22 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     status_box->setLayout(status_layout);
 
 
+    called = new QPushButton;
+    called->setText("Appel fait");
+    connect(called, SIGNAL(clicked()), this, SLOT(callClient()));
+
+    last_call = new QDateEdit;
+    last_call->setReadOnly(true);
+
+    QVBoxLayout* call_layout = new QVBoxLayout;
+    call_layout->addWidget(called);
+    call_layout->addWidget(last_call);
+
+    QGroupBox* call_box = new QGroupBox;
+    call_box->setTitle("Rappel client");
+    call_box->setLayout(call_layout);
+
+
 
     name = new QLineEdit;
     name->setMaximumWidth(300);
@@ -173,6 +189,7 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     QHBoxLayout* top_part = new QHBoxLayout;
     top_part->addLayout(personal_info);
     top_part->addWidget(status_box);
+    top_part->addWidget(call_box);
     top_part->addLayout(action_layout);
 
 
@@ -224,6 +241,15 @@ void Drawer::loadData(const DrawerData& data)
     repair->setText(data.getRepairs());
     comments->setText(data.getComments());
     price->setText(data.getPrice());
+
+    DBHandler handler;
+    QString file_name = "data/computer" + QString::number(m_id) + ".json";
+    handler.loadContactData(file_name, &m_call_data);
+
+    if(!m_call_data.dates().empty())//check if vector is empty
+    {
+        last_call->setDate(m_call_data.dates().back());
+    }
 }
 
 void Drawer::saveChange()
@@ -267,6 +293,16 @@ void Drawer::saveChange()
 
     setReadMode();
     emit updated();
+}
+
+void Drawer::callClient()
+{
+    last_call->setDate(QDate::currentDate());
+    m_call_data.dates().push_back(last_call->date());
+
+    DBHandler handler;
+    QString file_name = "data/computer" + QString::number(m_id) + ".json";
+    handler.saveContactData(file_name, &m_call_data);
 }
 
 void Drawer::discardChange()

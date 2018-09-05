@@ -14,6 +14,7 @@
 #include <QFile>
 #include <QComboBox>
 #include <QMessageBox>
+#include <QDateEdit>
 
 #include <memory>
 
@@ -52,6 +53,7 @@ private slots:
     void setEditable();
     void saveChange();
     void discardChange();
+    void callClient();
 
 private:
 
@@ -61,6 +63,7 @@ private:
     bool client_aware;
 
     QLabel* client_awarness;
+    QDateEdit* last_call;
     QComboBox* client_awarness_edit;
     QComboBox* status;
     QLineEdit* name;
@@ -75,8 +78,10 @@ private:
     QPushButton* modify;
     QPushButton* save;
     QPushButton* discard;
+    QPushButton* called;
 
     DrawerData* m_data;
+    ContactData m_call_data;
 };
 
 #endif // DRAWER_H

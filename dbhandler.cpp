@@ -129,3 +129,54 @@ void DBHandler::saveAll(std::vector<DrawerData>& datas)
 
     file.close();
 }
+
+void DBHandler::loadContactData(const QString& file_name, ContactData* data)
+{
+    QFile file(file_name);
+    if(!file.open(QIODevice::ReadWrite))
+    {
+        qWarning("Failed to open contact data file !");
+        //set manually the data then return
+    }
+
+    QByteArray raw_data = file.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(raw_data);
+    QJsonObject object = doc.object();
+
+    if(object.contains("contacted date") && object["contacted date"].isArray())
+    {
+        QJsonArray date = object["contacted date"].toArray();
+        data->dates().clear();
+        for(int i = 0; i < date.size(); i++)
+        {
+            QDate save_date = QDate::fromString(date[i].toString());
+            data->dates().push_back(save_date);
+        }
+    }
+
+    file.close();
+}
+
+void DBHandler::saveContactData(const QString& file_name, ContactData* data)
+{
+    QFile file(file_name);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        qWarning("Failed to open file for writing !");
+        //do a return
+    }
+
+    QJsonArray json;
+    for(uint i = 0; i < data->dates().size(); i++)
+    {
+        json.append(data->dates()[i].toString());
+    }
+
+    QJsonObject object;
+    object["contacted date"] = json;
+
+    QJsonDocument doc(object);
+    file.write(doc.toJson());
+
+    file.close();
+}
