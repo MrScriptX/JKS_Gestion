@@ -55,6 +55,8 @@ private slots:
 
 private:
 
+    void setReadMode();
+
     int m_id;
     bool client_aware;
 
