@@ -254,10 +254,6 @@ void Drawer::saveChange()
     m_data->setComments(comments->toPlainText());
     m_data->setPrice(price->text());
 
-    status->setEnabled(false);
-    client_awarness->setVisible(true);
-    client_awarness_edit->setVisible(false);
-
     if(client_awarness_edit->currentIndex() == 0)
     {
         QPixmap map = QPixmap::fromImage(QImage(":/image/check_ico.png"));
@@ -269,48 +265,7 @@ void Drawer::saveChange()
         client_awarness->setPixmap(map);
     }
 
-    name->setFrame(false);
-    name->setReadOnly(true);
-    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    surname->setFrame(false);
-    surname->setReadOnly(true);
-    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    contact->setFrame(false);
-    contact->setReadOnly(true);
-    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    deposit_date->setFrame(false);
-    deposit_date->setReadOnly(true);
-    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    price->setFrame(false);
-    price->setReadOnly(true);
-    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    breakdown->setReadOnly(true);
-    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    complement_info->setReadOnly(true);
-    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    repair->setReadOnly(true);
-    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    comments->setReadOnly(true);
-    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    modify->setText("Editer");
-    modify->setDisabled(false);
-
-    save->setText("Sauvergarder");
-    save->setDisabled(true);
-
-    discard->setText("Annuler");
-    discard->setDisabled(true);
-
-    update();
+    setReadMode();
     emit updated();
 }
 
@@ -332,53 +287,7 @@ void Drawer::discardChange()
 
 
     loadData(*m_data);
-
-    status->setEnabled(false);
-    client_awarness->setVisible(true);
-    client_awarness_edit->setVisible(false);
-
-    name->setFrame(false);
-    name->setReadOnly(true);
-    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    surname->setFrame(false);
-    surname->setReadOnly(true);
-    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    contact->setFrame(false);
-    contact->setReadOnly(true);
-    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    deposit_date->setFrame(false);
-    deposit_date->setReadOnly(true);
-    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    price->setFrame(false);
-    price->setReadOnly(true);
-    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    breakdown->setReadOnly(true);
-    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    complement_info->setReadOnly(true);
-    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    repair->setReadOnly(true);
-    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    comments->setReadOnly(true);
-    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    modify->setText("Editer");
-    modify->setDisabled(false);
-
-    save->setText("Sauvergarder");
-    save->setDisabled(true);
-
-    discard->setText("Annuler");
-    discard->setDisabled(true);
-
-    update();
+    setReadMode();
 }
 
 void Drawer::setEditable()
@@ -427,6 +336,56 @@ void Drawer::setEditable()
 
     discard->setText("Annuler");
     discard->setDisabled(false);
+
+    update();
+}
+
+void Drawer::setReadMode()
+{
+    status->setEnabled(false);
+    client_awarness->setVisible(true);
+    client_awarness_edit->setVisible(false);
+
+    name->setFrame(false);
+    name->setReadOnly(true);
+    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    surname->setFrame(false);
+    surname->setReadOnly(true);
+    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    contact->setFrame(false);
+    contact->setReadOnly(true);
+    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    deposit_date->setFrame(false);
+    deposit_date->setReadOnly(true);
+    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    price->setFrame(false);
+    price->setReadOnly(true);
+    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    breakdown->setReadOnly(true);
+    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    complement_info->setReadOnly(true);
+    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    repair->setReadOnly(true);
+    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    comments->setReadOnly(true);
+    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+
+    modify->setText("Editer");
+    modify->setDisabled(false);
+
+    save->setText("Sauvergarder");
+    save->setDisabled(true);
+
+    discard->setText("Annuler");
+    discard->setDisabled(true);
 
     update();
 }

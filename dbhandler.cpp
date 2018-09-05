@@ -7,7 +7,11 @@ DBHandler::DBHandler()
 
 DBHandler::~DBHandler()
 {
-
+    QFile file(FILE_NAME);
+    if(file.isOpen())
+    {
+        file.close();
+    }
 }
 
 void DBHandler::loadAll(std::vector<DrawerData>& datas)

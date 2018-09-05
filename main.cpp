@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     app.setApplicationName("JKS Gestion");
-    app.setApplicationVersion("v0.0.1");
+    app.setApplicationVersion("v0.0.2");
     app.setWindowIcon(QIcon(":/image/logo.ico"));
 
     MainWindow window;
