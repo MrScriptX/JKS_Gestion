@@ -21,15 +21,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
-    void contextMenuEvent(QContextMenuEvent* event) override;
 signals:
 
 public slots:
     void openDrawer(uint32_t i);
     void updateMain();
-
-private slots:
-    void reset();
 
 private:
     void setupWindow();

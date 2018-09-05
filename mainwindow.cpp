@@ -9,13 +9,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setupWindow();
 }
 
-void MainWindow::contextMenuEvent(QContextMenuEvent *event)
-{
-    QMenu menu(this);
-    menu.addAction(m_reset);
-    menu.exec(event->globalPos());
-}
-
 void MainWindow::setupWindow()
 {
     m_reset = new QAction;
@@ -116,23 +109,8 @@ void MainWindow::openDrawer(uint32_t i)
 
 void MainWindow::updateMain()
 {
-    QString err = m_drawers_data[1].getName();
-    if(err == "cecile")
-    {
-        qWarning("true");
-    }
-    else
-    {
-        qWarning("false");
-    }
-
     handler.saveAll(m_drawers_data);
     m_drawers.clear();
     setupWindow();
     update();
-}
-
-void MainWindow::reset()
-{
-
 }
