@@ -1,3 +1,6 @@
+//add delete button
+//add call history viewer
+
 #ifndef DRAWER_H
 #define DRAWER_H
 
@@ -54,10 +57,12 @@ private slots:
     void saveChange();
     void discardChange();
     void callClient();
+    void reset();
 
 private:
 
     void setReadMode();
+    void warning(const char msg[]);
 
     int m_id;
     bool client_aware;
@@ -75,10 +80,12 @@ private:
     QTextEdit* repair;
     QTextEdit* comments;
     QLineEdit* price;
+
     QPushButton* modify;
     QPushButton* save;
     QPushButton* discard;
     QPushButton* called;
+    QPushButton* reset_drawer;
 
     DrawerData* m_data;
     ContactData m_call_data;

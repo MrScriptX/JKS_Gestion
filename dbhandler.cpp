@@ -17,7 +17,7 @@ DBHandler::~DBHandler()
 void DBHandler::loadAll(std::vector<DrawerData>& datas)
 {
     QFile file(FILE_NAME);
-    if(!file.open(QIODevice::ReadWrite))
+    if(!file.open(QIODevice::ReadOnly))
     {
         qWarning("Failed to open the file for reading !");
     }
@@ -99,7 +99,7 @@ void DBHandler::loadAll(std::vector<DrawerData>& datas)
 void DBHandler::saveAll(std::vector<DrawerData>& datas)
 {
     QFile file(FILE_NAME);
-    if(!file.open(QIODevice::ReadWrite))
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         qWarning("Failed to open the file for reading !");
     }
@@ -133,7 +133,7 @@ void DBHandler::saveAll(std::vector<DrawerData>& datas)
 void DBHandler::loadContactData(const QString& file_name, ContactData* data)
 {
     QFile file(file_name);
-    if(!file.open(QIODevice::ReadWrite))
+    if(!file.open(QIODevice::ReadOnly))
     {
         qWarning("Failed to open contact data file !");
         //set manually the data then return
@@ -160,7 +160,7 @@ void DBHandler::loadContactData(const QString& file_name, ContactData* data)
 void DBHandler::saveContactData(const QString& file_name, ContactData* data)
 {
     QFile file(file_name);
-    if(!file.open(QIODevice::WriteOnly))
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         qWarning("Failed to open file for writing !");
         //do a return

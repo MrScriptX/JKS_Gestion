@@ -52,6 +52,8 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     last_call = new QDateEdit;
     last_call->setReadOnly(true);
 
+
+
     QVBoxLayout* call_layout = new QVBoxLayout;
     call_layout->addWidget(called);
     call_layout->addWidget(last_call);
@@ -136,6 +138,19 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
     QLabel* l_price = new QLabel("Prix : ");
 
+    QHBoxLayout* price_layout = new QHBoxLayout;
+    price_layout->addWidget(l_price);
+    price_layout->addWidget(price);
+    price_layout->addStretch();
+
+    reset_drawer = new QPushButton;
+    reset_drawer->setText("Reset");
+    connect(reset_drawer, SIGNAL(clicked()), this, SLOT(reset()));
+
+    QHBoxLayout* bottom_part = new QHBoxLayout;
+    bottom_part->addLayout(price_layout);
+    bottom_part->addWidget(reset_drawer);
+
 
     modify = new QPushButton;
     modify->setText("Editer");
@@ -193,21 +208,47 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     top_part->addLayout(action_layout);
 
 
-    QHBoxLayout* price_layout = new QHBoxLayout;
-    price_layout->addWidget(l_price);
-    price_layout->addWidget(price);
-    price_layout->addStretch();
-
-
     QVBoxLayout* window = new QVBoxLayout;
     window->addLayout(top_part);
     window->addWidget(l_breakdown);
     window->addWidget(l_complement_info);
     window->addWidget(l_repair);
     window->addWidget(l_comments);
-    window->addLayout(price_layout);
+    window->addLayout(bottom_part);
 
     setLayout(window);
+}
+
+void Drawer::reset()
+{
+    warning("Voulez-vous vraiment EFFACER les données du casier ?");
+
+    status->setCurrentIndex(0);
+    client_awarness_edit->setCurrentIndex(0);
+
+    name->setText("");
+    surname->setText("");
+    contact->setText("");
+    deposit_date->setText("");
+    breakdown->setText("");
+    complement_info->setText("");
+    repair->setText("");
+    comments->setText("");
+    price->setText("");
+
+    m_data->setStatus(status->currentIndex());
+    m_data->setClient_awarness(client_awarness_edit->currentIndex());
+    m_data->setName(name->text());
+    m_data->setSurname(surname->text());
+    m_data->setContact(contact->text());
+    m_data->setDeposit_date(deposit_date->text());
+    m_data->setBreakdown(breakdown->toPlainText());
+    m_data->setComplementary_info(complement_info->toPlainText());
+    m_data->setRepairs(repair->toPlainText());
+    m_data->setComments(comments->toPlainText());
+    m_data->setPrice(price->text());
+
+    emit updated();
 }
 
 void Drawer::setup(const int& id, DrawerData& data)
@@ -254,19 +295,7 @@ void Drawer::loadData(const DrawerData& data)
 
 void Drawer::saveChange()
 {
-    switch( QMessageBox::question(this, tr("Attention"),
-                tr("Voulez-vous vraiment SAUVEGARDER vos changements ?"),
-                QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
-    {
-      case QMessageBox::Yes:
-        qWarning("Yes selected !");
-        break;
-      case QMessageBox::No:
-        return;
-      default:
-        qWarning("Unexpected error occured ! Operation aborted !");
-        break;
-    }
+    warning("Voulez-vous vraiment SAUVEGARDER vos changements ?");
 
     m_data->setStatus(status->currentIndex());
     m_data->setClient_awarness(client_awarness_edit->currentIndex());
@@ -307,20 +336,7 @@ void Drawer::callClient()
 
 void Drawer::discardChange()
 {
-    switch( QMessageBox::question(this, tr("Attention"),
-                tr("Voulez-vous vraiment ANNULER vos changements ?"),
-                QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
-    {
-      case QMessageBox::Yes:
-        qWarning("Yes selected !");
-        break;
-      case QMessageBox::No:
-        return;
-      default:
-        qWarning("Unexpected error occured ! Operation aborted !");
-        break;
-    }
-
+    warning("Voulez-vous vraiment ANNULER vos changements ?");
 
     loadData(*m_data);
     setReadMode();
@@ -424,4 +440,21 @@ void Drawer::setReadMode()
     discard->setDisabled(true);
 
     update();
+}
+
+void Drawer::warning(const char msg[])
+{
+    switch( QMessageBox::question(this, tr("Attention"),
+                tr(msg),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
+    {
+      case QMessageBox::Yes:
+        qWarning("Yes selected !");
+        break;
+      case QMessageBox::No:
+        return;
+      default:
+        qWarning("Unexpected error occured ! Operation aborted !");
+        break;
+    }
 }

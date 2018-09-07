@@ -7,14 +7,16 @@ SOURCES += \
     drawer.cpp \
     dbhandler.cpp \
     drawerdata.cpp \
-    contactdata.cpp
+    contactdata.cpp \
+    callviewer.cpp
 
 HEADERS += \
     mainwindow.h \
     drawer.h \
     dbhandler.h \
     drawerdata.h \
-    contactdata.h
+    contactdata.h \
+    callviewer.h
 
 RESOURCES += \
     image.qrc
