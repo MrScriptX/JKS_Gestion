@@ -1,3 +1,6 @@
+//add delete button
+//add call history viewer
+
 #ifndef DRAWER_H
 #define DRAWER_H
 
@@ -14,6 +17,7 @@
 #include <QFile>
 #include <QComboBox>
 #include <QMessageBox>
+#include <QDateEdit>
 
 #include <memory>
 
@@ -52,13 +56,19 @@ private slots:
     void setEditable();
     void saveChange();
     void discardChange();
+    void callClient();
+    void reset();
 
 private:
+
+    void setReadMode();
+    void warning(const char msg[]);
 
     int m_id;
     bool client_aware;
 
     QLabel* client_awarness;
+    QDateEdit* last_call;
     QComboBox* client_awarness_edit;
     QComboBox* status;
     QLineEdit* name;
@@ -70,11 +80,15 @@ private:
     QTextEdit* repair;
     QTextEdit* comments;
     QLineEdit* price;
+
     QPushButton* modify;
     QPushButton* save;
     QPushButton* discard;
+    QPushButton* called;
+    QPushButton* reset_drawer;
 
     DrawerData* m_data;
+    ContactData m_call_data;
 };
 
 #endif // DRAWER_H

@@ -34,7 +34,7 @@ void MainWindow::setupWindow()
 
         QString client;
         //temp
-        if(name == "" || surname == "")
+        if(name == "" || surname == "" || name == " " || surname == " ")
         {
            client = "empty";
            status = Status::EMPTY;
@@ -65,11 +65,11 @@ void MainWindow::setupWindow()
     }
 
     QGridLayout* layout = new QGridLayout;
-    for(uint32_t i = 0; i < m_drawers.size(); i++)
+    for(uint32_t i = 1; i < m_drawers.size(); i++)
     {
-        if(i + 1 < 11)
+        if(i < 11)
         {
-            layout->addWidget(m_drawers.at(i + 1), static_cast<int>(i + 1), 1);
+            layout->addWidget(m_drawers.at(i), static_cast<int>(i), 1);
         }
         else if(i < 21)
         {
