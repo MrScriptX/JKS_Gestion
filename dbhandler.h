@@ -28,6 +28,7 @@ public:
     void loadContactData(const QString& file_name, ContactData* data);
     void saveContactData(const QString& file_name, ContactData* data);
 
+    void deleteFileData(const QString& file_name);
 private:
 
     const QString FILE_NAME = "data.json";

@@ -50,13 +50,17 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     connect(called, SIGNAL(clicked()), this, SLOT(callClient()));
 
     last_call = new QDateEdit;
-    last_call->setReadOnly(true);
+    last_call->setReadOnly(false);////////////////////////////////////////////////////////////:
 
+    view_calls = new QPushButton;
+    view_calls->setText("Voir appel");
+    connect(view_calls, SIGNAL(clicked()), this, SLOT(call_viewer()));
 
 
     QVBoxLayout* call_layout = new QVBoxLayout;
     call_layout->addWidget(called);
     call_layout->addWidget(last_call);
+    call_layout->addWidget(view_calls);
 
     QGroupBox* call_box = new QGroupBox;
     call_box->setTitle("Rappel client");
@@ -219,6 +223,19 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     setLayout(window);
 }
 
+void Drawer::call_viewer()
+{
+    if(m_viewer != nullptr)
+    {
+        m_viewer.reset();
+    }
+
+    QString tmp = "computer" + QString::number(m_id) + ".json";
+    m_viewer = std::make_unique<CallViewer>();
+    m_viewer->setup(tmp);
+    m_viewer->load(m_call_data);
+}
+
 void Drawer::reset()
 {
     warning("Voulez-vous vraiment EFFACER les données du casier ?");
@@ -247,6 +264,12 @@ void Drawer::reset()
     m_data->setRepairs(repair->toPlainText());
     m_data->setComments(comments->toPlainText());
     m_data->setPrice(price->text());
+
+    m_call_data.dates().clear();
+
+    DBHandler handler;
+    QString file_name = "data/computer" + QString::number(m_id) + ".json";
+    handler.saveContactData(file_name, &m_call_data);
 
     emit updated();
 }
@@ -326,6 +349,8 @@ void Drawer::saveChange()
 
 void Drawer::callClient()
 {
+    warning("Confirmez-vous avoir PASSEZ UN APPEL au client ?");
+
     last_call->setDate(QDate::currentDate());
     m_call_data.dates().push_back(last_call->date());
 

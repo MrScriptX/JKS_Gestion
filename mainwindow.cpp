@@ -34,7 +34,7 @@ void MainWindow::setupWindow()
 
         QString client;
         //temp
-        if(name == "" || surname == "" || name == " " || surname == " ")
+        if(name == "" || name == " ")
         {
            client = "empty";
            status = Status::EMPTY;
