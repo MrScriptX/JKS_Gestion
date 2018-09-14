@@ -19,7 +19,8 @@ HEADERS += \
     callviewer.h
 
 RESOURCES += \
-    image.qrc
+    image.qrc \
+    file.qrc
 
 RC_FILE = jks_gestion.rc
 

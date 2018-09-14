@@ -51,15 +51,18 @@ void MainWindow::setupWindow()
 
         drawer->setFont(button_font);
         drawer->setText(QString::number(i) + " : " + client);
+        drawer->setFixedHeight(50);
         if(status != Status::EMPTY)
         {
             if(status != Status::READY)
             {
-                drawer->setStyleSheet("background-color: orange;");
+                drawer->setStyleSheet("QPushButton{ background-color: #ff8300;} "
+                                      "QPushButton:hover { background-color: #ffa240;}");
             }
             else
             {
-                drawer->setStyleSheet("background-color: green;");
+                drawer->setStyleSheet("QPushButton{ background-color: #27b600;} "
+                                      "QPushButton:hover { background-color: #5dc840;}");
             }
         }
 

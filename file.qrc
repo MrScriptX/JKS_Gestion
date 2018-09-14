@@ -1,0 +1,6 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/stylesheets">
+        <file alias="stylesheet.qss">stylesheet.qss</file>
+    </qresource>
+</RCC>
