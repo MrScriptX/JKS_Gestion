@@ -46,6 +46,10 @@ void MainWindow::setupWindow()
         //end temp
 
         QPushButton* drawer = new QPushButton;
+        QFont button_font = drawer->font();
+        button_font.setPointSize(10);
+
+        drawer->setFont(button_font);
         drawer->setText(QString::number(i) + " : " + client);
         if(status != Status::EMPTY)
         {
