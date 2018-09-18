@@ -11,6 +11,8 @@
 #include <QMenu>
 #include <QAction>
 #include <QContextMenuEvent>
+#include <QMenuBar>
+#include <QDebug>
 
 #include "drawer.h"
 #include "dbhandler.h"
@@ -26,9 +28,11 @@ signals:
 public slots:
     void openDrawer(uint32_t i);
     void updateMain();
+    void receipt();
 
 private:
     void setupWindow();
+    void createAction();
 
     std::vector<QPushButton*> m_drawers;
     std::vector<DrawerData> m_drawers_data;
@@ -36,7 +40,8 @@ private:
 
     DBHandler handler;
 
-    QAction* m_reset;
+    //QAction* m_reset;
+    QAction* m_receipt;
 };
 
 #endif // MAINWINDOW_H

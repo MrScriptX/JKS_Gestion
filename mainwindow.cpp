@@ -11,8 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 void MainWindow::setupWindow()
 {
-    m_reset = new QAction;
-    m_reset->setText("reset");
+    createAction();
 
     if(!m_drawers_data.empty())
     {
@@ -98,6 +97,13 @@ void MainWindow::setupWindow()
     setCentralWidget(centralWidget);
 }
 
+void MainWindow::createAction()
+{
+    m_receipt = menuBar()->addAction(tr("Receipt"));
+    m_receipt->setToolTip(tr("Nouveau recepisse client"));
+    connect(m_receipt, &QAction::triggered, this, &MainWindow::receipt);
+}
+
 void MainWindow::openDrawer(uint32_t i)
 {
     if(m_drawer != nullptr)
@@ -120,4 +126,9 @@ void MainWindow::updateMain()
     m_drawers.clear();
     setupWindow();
     update();
+}
+
+void MainWindow::receipt()
+{
+    qDebug() << "receipt press";
 }

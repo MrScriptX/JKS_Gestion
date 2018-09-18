@@ -1,5 +1,9 @@
 #include "drawer.h"
 
+
+//while in edit mode: set text color to black or white and adjust background color
+//warning box button are too small, adjust their size
+
 Drawer::Drawer(QWidget *parent) : QWidget(parent)
 {
     client_aware = true;
@@ -16,6 +20,8 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     status->addItem("REPARE");
     status->setCurrentIndex(static_cast<int>(Status::EMPTY));
     status->setEnabled(false);
+    status->setFixedHeight(30);
+    status->setFixedWidth(230);
 
     client_awarness = new QLabel;
     QPixmap awarness_ico = QPixmap::fromImage(QImage(":/image/check_ico.png"));
@@ -47,13 +53,19 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
 
     called = new QPushButton;
     called->setText("Appel fait");
+    called->setFixedHeight(40);
+    called->setFixedWidth(120);
     connect(called, SIGNAL(clicked()), this, SLOT(callClient()));
 
     last_call = new QDateEdit;
-    last_call->setReadOnly(false);////////////////////////////////////////////////////////////:
+    last_call->setReadOnly(true);
+    last_call->setFixedHeight(40);
+    last_call->setFixedWidth(120);
 
     view_calls = new QPushButton;
     view_calls->setText("Voir appel");
+    view_calls->setFixedHeight(40);
+    view_calls->setFixedWidth(120);
     connect(view_calls, SIGNAL(clicked()), this, SLOT(call_viewer()));
 
 
@@ -72,21 +84,21 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     name->setMaximumWidth(300);
     name->setFrame(false);
     name->setReadOnly(true);
-    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_name = new QLabel("Nom : ");
 
     surname = new QLineEdit;
     surname->setMaximumWidth(300);
     surname->setFrame(false);
     surname->setReadOnly(true);
-    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_surname = new QLabel("Prenom : ");
 
     contact = new QLineEdit;
     contact->setMaximumWidth(300);
     contact->setFrame(false);
     contact->setReadOnly(true);
-    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_contact = new QLabel("Contact : ");
 
 
@@ -94,12 +106,12 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     deposit_date->setMaximumWidth(200);
     deposit_date->setFrame(false);
     deposit_date->setReadOnly(true);
-    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_deposit_date = new QLabel("Date de dépot : ");
 
     breakdown = new QTextEdit;
     breakdown->setReadOnly(true);
-    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QHBoxLayout* breakdown_layout = new QHBoxLayout;
     breakdown_layout->addWidget(breakdown);
     QGroupBox* l_breakdown = new QGroupBox;
@@ -109,7 +121,7 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
 
     complement_info = new QTextEdit;
     complement_info->setReadOnly(true);
-    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QHBoxLayout* complement_info_layout = new QHBoxLayout;
     complement_info_layout->addWidget(complement_info);
     QGroupBox* l_complement_info = new QGroupBox;
@@ -119,7 +131,7 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
 
     repair = new QTextEdit;
     repair->setReadOnly(true);
-    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QHBoxLayout* repair_layout = new QHBoxLayout;
     repair_layout->addWidget(repair);
     QGroupBox* l_repair = new QGroupBox;
@@ -128,7 +140,7 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
 
     comments = new QTextEdit;
     comments->setReadOnly(true);
-    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QHBoxLayout* comments_layout = new QHBoxLayout;
     comments_layout->addWidget(comments);
     QGroupBox* l_comments = new QGroupBox;
@@ -139,7 +151,7 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     price->setMaximumWidth(200);
     price->setFrame(false);
     price->setReadOnly(true);
-    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_price = new QLabel("Prix : ");
 
     QHBoxLayout* price_layout = new QHBoxLayout;
@@ -149,6 +161,8 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
 
     reset_drawer = new QPushButton;
     reset_drawer->setText("Reset");
+    reset_drawer->setFixedHeight(40);
+    reset_drawer->setFixedWidth(100);
     connect(reset_drawer, SIGNAL(clicked()), this, SLOT(reset()));
 
     QHBoxLayout* bottom_part = new QHBoxLayout;
@@ -159,16 +173,22 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     modify = new QPushButton;
     modify->setText("Editer");
     modify->setDisabled(false);
+    modify->setFixedHeight(40);
+    modify->setFixedWidth(100);
     connect(modify, SIGNAL(clicked()), this, SLOT(setEditable()));
 
     save = new QPushButton;
     save->setText("Sauvegarder");
     save->setDisabled(true);
+    save->setFixedHeight(40);
+    save->setFixedWidth(100);
     connect(save, SIGNAL(clicked()), this, SLOT(saveChange()));
 
     discard = new QPushButton;
     discard->setText("Annuler");
     discard->setDisabled(true);
+    discard->setFixedHeight(40);
+    discard->setFixedWidth(100);
     connect(discard, SIGNAL(clicked()), this, SLOT(discardChange()));
 
     QVBoxLayout* action_layout = new QVBoxLayout;
@@ -238,7 +258,10 @@ void Drawer::call_viewer()
 
 void Drawer::reset()
 {
-    warning("Voulez-vous vraiment EFFACER les données du casier ?");
+    if(!warning("Voulez-vous vraiment EFFACER les données du casier ?"))
+    {
+        return;
+    }
 
     status->setCurrentIndex(0);
     client_awarness_edit->setCurrentIndex(0);
@@ -318,7 +341,10 @@ void Drawer::loadData(const DrawerData& data)
 
 void Drawer::saveChange()
 {
-    warning("Voulez-vous vraiment SAUVEGARDER vos changements ?");
+    if(!warning("Voulez-vous vraiment SAUVEGARDER vos changements ?"))
+    {
+        return;
+    }
 
     m_data->setStatus(status->currentIndex());
     m_data->setClient_awarness(client_awarness_edit->currentIndex());
@@ -349,7 +375,10 @@ void Drawer::saveChange()
 
 void Drawer::callClient()
 {
-    warning("Confirmez-vous avoir PASSEZ UN APPEL au client ?");
+    if(!warning("Confirmez-vous avoir PASSEZ UN APPEL au client ?"))
+    {
+        return;
+    }
 
     last_call->setDate(QDate::currentDate());
     m_call_data.dates().push_back(last_call->date());
@@ -467,19 +496,17 @@ void Drawer::setReadMode()
     update();
 }
 
-void Drawer::warning(const char msg[])
+bool Drawer::warning(const char msg[])
 {
     switch( QMessageBox::question(this, tr("Attention"),
                 tr(msg),
                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
     {
       case QMessageBox::Yes:
-        qWarning("Yes selected !");
-        break;
+        return true;
       case QMessageBox::No:
-        return;
+        return false;
       default:
-        qWarning("Unexpected error occured ! Operation aborted !");
-        break;
+        return false;
     }
 }

@@ -64,7 +64,7 @@ private slots:
 private:
 
     void setReadMode();
-    void warning(const char msg[]);
+    bool warning(const char msg[]);
 
     std::unique_ptr<CallViewer> m_viewer;
 
