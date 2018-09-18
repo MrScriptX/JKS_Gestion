@@ -9,6 +9,10 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QDebug>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QPainter>
 
 class ReceiptManager : public QWidget
 {
@@ -19,14 +23,19 @@ public:
 signals:
 
 public slots:
+    void print();
 
 private:
     void buildClientBox();
+    void buildDepositBox();
+    void buildClientReceiptBox();
 
     QLabel* title;
     QGroupBox* client_box;
     QLabel* subtitle;
     QGroupBox* deposit_box;
+    QLabel* receipt_title;
+    QGroupBox* receipt_box;
 
     QLabel* datel;
     QLineEdit* date;
@@ -45,7 +54,31 @@ private:
     QLabel* emaill;
     QLineEdit* email;
 
-    QPushButton* print;
+    QLabel* mat_typel;//material type
+    QLineEdit* mat_type;
+    QLabel* passwordl;
+    QLineEdit* password;
+    QLabel* savel;
+    QLineEdit* save;
+    QLabel* chargerl;
+    QLineEdit* charger;
+    QLabel* statel;//physical state
+    QTextEdit* state;
+    QLabel* breakdownl;
+    QTextEdit* breakdown;
+    QLabel* operationl;
+    QTextEdit* operation;//work done | leave blank
+
+    QLabel* date_depl;//date deposit
+    QLineEdit* date_dep;
+    QLabel* name_surl;//name and surname
+    QLineEdit* name_sur;
+    QLabel* mat_type_bisl;
+    QLineEdit* mat_type_bis;
+    QLabel* brandl;
+    QLineEdit* brand;
+
+    QPushButton* m_print;
 };
 
 #endif // RECEIPTMANAGER_H

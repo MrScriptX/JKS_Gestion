@@ -130,5 +130,7 @@ void MainWindow::updateMain()
 
 void MainWindow::receipt()
 {
-    qDebug() << "receipt press";
+    m_receipt_manager.reset();
+    m_receipt_manager = std::make_unique<ReceiptManager>();
+    m_receipt_manager->show();
 }

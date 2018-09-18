@@ -16,6 +16,7 @@
 
 #include "drawer.h"
 #include "dbhandler.h"
+#include "receiptmanager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -37,6 +38,7 @@ private:
     std::vector<QPushButton*> m_drawers;
     std::vector<DrawerData> m_drawers_data;
     std::unique_ptr<Drawer> m_drawer;
+    std::unique_ptr<ReceiptManager> m_receipt_manager;
 
     DBHandler handler;
 
