@@ -10,7 +10,8 @@ SOURCES += \
     drawerdata.cpp \
     contactdata.cpp \
     callviewer.cpp \
-    receiptmanager.cpp
+    receiptmanager.cpp \
+    Client/clientmanager.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -19,7 +20,8 @@ HEADERS += \
     drawerdata.h \
     contactdata.h \
     callviewer.h \
-    receiptmanager.h
+    receiptmanager.h \
+    Client/clientmanager.h
 
 RESOURCES += \
     image.qrc \

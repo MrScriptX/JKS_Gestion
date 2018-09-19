@@ -8,7 +8,9 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
     subtitle = new QLabel("Identification du Matériel et panne constatée");
     buildDepositBox();
 
-    receipt_title = new QLabel("Recepisse client");
+    receipt_title = new QLabel("--------------------------------------------------");
+    receipt_title->setAlignment(Qt::AlignHCenter);
+    receipt_title->setContentsMargins(0, 20, 0, 20);
     buildClientReceiptBox();
 
     m_print = new QPushButton;
@@ -25,7 +27,13 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
     container->addWidget(receipt_box);
     container->addWidget(m_print);
 
-    setMinimumSize(750, 900);
+    QFile file(":/stylesheets/printstyle.qss");
+    file.open(QFile::ReadOnly);
+    QString StyleSheet = QLatin1String(file.readAll());
+    file.close();
+
+    setStyleSheet(StyleSheet);
+    setFixedSize(673, 950);
     setLayout(container);
 }
 
