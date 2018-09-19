@@ -81,12 +81,17 @@ void ReceiptManager::buildClientBox()
     contact_lt->addWidget(emaill);
     contact_lt->addWidget(email);
 
+    m_client = new QPushButton;
+    m_client->setText("Add client");
+    connect(m_client, SLOT(clicked()), this, SIGNAL(fillClient()));
+
     QVBoxLayout* container = new QVBoxLayout;
     container->addLayout(date_lt);
     container->addLayout(name_lt);
     container->addLayout(address_lt);
     container->addLayout(city_lt);
     container->addLayout(contact_lt);
+    container->addWidget(m_client);
 
     client_box = new QGroupBox;
     client_box->setTitle("Information Client");
@@ -197,4 +202,19 @@ void ReceiptManager::print()
     this->render(&painter);
 
     painter.end();
+}
+
+void ReceiptManager::fillClient()
+{
+    ClientManager c_manager;
+    c_manager.viewer(Client::FETCH_CLIENT);
+
+    client tmp;
+    name->setText(tmp.name);
+    surname->setText(tmp.surname);
+    address->setText(tmp.address);
+    postal_code->setText(tmp.zip);
+    city->setText(tmp.city);
+    phone->setText(tmp.phone);
+    email->setText(tmp.email);
 }

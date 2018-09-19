@@ -103,3 +103,37 @@ void ClientManager::loadClients(std::vector<client>& clients)
 
     file.close();
 }
+
+void ClientManager::viewer(Client usage, std::shared_ptr<client> holder)
+{
+    std::vector<client> clients;
+    loadClients(clients);
+
+    QStringList name_list;
+    for(size_t i = 0; i < clients.size(); i++)
+    {
+        name_list.push_back(clients[i].surname + " " + clients[i].name);
+    }
+
+    QStringListModel* model = new QStringListModel;
+    model->setStringList(name_list);
+
+    QListView* view = new QListView;
+    view->setModel(model);
+
+    if(usage == Client::FETCH_CLIENT)
+    {
+        connect(view, SIGNAL(doubleClicke(const QModelIndex)), this, SLOT(selectClient(holder)));
+    }
+    else if(usage != Client::VIEW_CLIENT)
+    {
+        qDebug() << "Usage mode is invalid !";
+    }
+
+
+    QVBoxLayout* wrapper = new QVBoxLayout;
+    wrapper->addWidget(view);
+
+    setLayout(wrapper);
+    show();
+}

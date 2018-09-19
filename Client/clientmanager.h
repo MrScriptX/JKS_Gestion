@@ -6,8 +6,19 @@
 #include <QJsonArray>
 #include <QFile>
 #include <QWidget>
+#include <QVBoxLayout>
+#include <QStringListModel>
+#include <QListView>
 #include <QDebug>
 #include <vector>
+#include <memory>
+
+
+enum class Client
+{
+    FETCH_CLIENT,
+    VIEW_CLIENT
+};
 
 struct client
 {
@@ -28,9 +39,12 @@ public:
 
     void saveClients(std::vector<client>& clients);
     void loadClients(std::vector<client>& clients);
+
+    void viewer(Client usage, std::shared_ptr<client> holder = nullptr);
 signals:
 
 public slots:
+    void selectClient(std::shared_ptr<client> holder);
 
 private:
 

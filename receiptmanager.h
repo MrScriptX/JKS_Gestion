@@ -15,6 +15,8 @@
 #include <QPainter>
 #include <QFile>
 
+#include "Client/clientmanager.h"
+
 class ReceiptManager : public QWidget
 {
     Q_OBJECT
@@ -25,6 +27,7 @@ signals:
 
 public slots:
     void print();
+    void fillClient();
 
 private:
     void buildClientBox();
@@ -80,6 +83,7 @@ private:
     QLineEdit* brand;
 
     QPushButton* m_print;
+    QPushButton* m_client;
 };
 
 #endif // RECEIPTMANAGER_H
