@@ -52,6 +52,7 @@ void ClientManager::loadClients(std::vector<client>& clients)
     if(object.contains("size") && object["size"].isDouble())
     {
         nbr_clients = object["size"].isDouble();
+        qDebug() << QString::number(nbr_clients);
     }
 
     for(size_t i = 0; i < nbr_clients; i++)
@@ -118,22 +119,37 @@ void ClientManager::viewer(Client usage, std::shared_ptr<client> holder)
     QStringListModel* model = new QStringListModel;
     model->setStringList(name_list);
 
-    QListView* view = new QListView;
-    view->setModel(model);
+    m_view = new QListView;
+    m_view->setModel(model);
 
     if(usage == Client::FETCH_CLIENT)
     {
-        connect(view, SIGNAL(doubleClicke(const QModelIndex)), this, SLOT(selectClient(holder)));
+        connect(m_view, &QListView::doubleClicked, this, [this, clients, holder](const QModelIndex& index){ this->selectClient(clients, holder, index); });
     }
     else if(usage != Client::VIEW_CLIENT)
     {
         qDebug() << "Usage mode is invalid !";
     }
 
-
     QVBoxLayout* wrapper = new QVBoxLayout;
-    wrapper->addWidget(view);
+    wrapper->addWidget(m_view);
 
     setLayout(wrapper);
     show();
+}
+
+void ClientManager::selectClient( std::vector<client> clients, std::shared_ptr<client> holder, const QModelIndex& index)
+{
+    holder = std::make_shared<client>(clients[static_cast<size_t>(index.row())]);
+    qDebug() << "client " + clients[static_cast<size_t>(index.row())].name;
+    close();
+}
+
+void ClientManager::saveClient(client& c)
+{
+    std::vector<client> clients;
+    loadClients(clients);
+
+    clients.push_back(c);
+    saveClients(clients);
 }

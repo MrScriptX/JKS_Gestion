@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QStringListModel>
 #include <QListView>
+#include <QPushButton>
 #include <QDebug>
 #include <vector>
 #include <memory>
@@ -41,14 +42,16 @@ public:
     void loadClients(std::vector<client>& clients);
 
     void viewer(Client usage, std::shared_ptr<client> holder = nullptr);
+    void saveClient(client& c);
 signals:
 
 public slots:
-    void selectClient(std::shared_ptr<client> holder);
+    void selectClient( std::vector<client> clients, std::shared_ptr<client> holder, const QModelIndex& index);
 
 private:
 
     const QString FILE_NAME = "client.json";
+    QListView* m_view;
 };
 
 #endif // CLIENTMANAGER_H

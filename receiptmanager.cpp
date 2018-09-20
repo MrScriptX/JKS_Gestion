@@ -83,7 +83,15 @@ void ReceiptManager::buildClientBox()
 
     m_client = new QPushButton;
     m_client->setText("Add client");
-    connect(m_client, SLOT(clicked()), this, SIGNAL(fillClient()));
+    connect(m_client, &QPushButton::clicked, this, &ReceiptManager::fillClient);
+
+    m_save_client = new QPushButton;
+    m_save_client->setText(tr("Save client"));
+    connect(m_save_client, &QPushButton::clicked, this, &ReceiptManager::saveClient);
+
+    QHBoxLayout* button_container = new QHBoxLayout;
+    button_container->addWidget(m_client);
+    button_container->addWidget(m_save_client);
 
     QVBoxLayout* container = new QVBoxLayout;
     container->addLayout(date_lt);
@@ -91,7 +99,7 @@ void ReceiptManager::buildClientBox()
     container->addLayout(address_lt);
     container->addLayout(city_lt);
     container->addLayout(contact_lt);
-    container->addWidget(m_client);
+    container->addLayout(button_container);
 
     client_box = new QGroupBox;
     client_box->setTitle("Information Client");
@@ -206,10 +214,11 @@ void ReceiptManager::print()
 
 void ReceiptManager::fillClient()
 {
-    ClientManager c_manager;
-    c_manager.viewer(Client::FETCH_CLIENT);
-
     client tmp;
+    m_cManager.reset();
+    m_cManager = std::make_unique<ClientManager>();
+    m_cManager->viewer(Client::FETCH_CLIENT, std::make_shared<client>(tmp));
+
     name->setText(tmp.name);
     surname->setText(tmp.surname);
     address->setText(tmp.address);
@@ -217,4 +226,20 @@ void ReceiptManager::fillClient()
     city->setText(tmp.city);
     phone->setText(tmp.phone);
     email->setText(tmp.email);
+}
+
+void ReceiptManager::saveClient()
+{
+    client c;
+    c.name = name->text();
+    c.surname = surname->text();
+    c.address = address->text();
+    c.zip = postal_code->text();
+    c.city = city->text();
+    c.phone = phone->text();
+    c.email = email->text();
+
+    m_cManager.reset();
+    m_cManager = std::make_unique<ClientManager>();
+    m_cManager->saveClient(c);
 }

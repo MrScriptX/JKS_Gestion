@@ -28,6 +28,7 @@ signals:
 public slots:
     void print();
     void fillClient();
+    void saveClient();
 
 private:
     void buildClientBox();
@@ -84,6 +85,9 @@ private:
 
     QPushButton* m_print;
     QPushButton* m_client;
+    QPushButton* m_save_client;
+
+    std::unique_ptr<ClientManager> m_cManager;
 };
 
 #endif // RECEIPTMANAGER_H
