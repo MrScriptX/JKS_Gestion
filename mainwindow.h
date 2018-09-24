@@ -30,6 +30,7 @@ public slots:
     void openDrawer(uint32_t i);
     void updateMain();
     void receipt();
+    void clientViewer();
 
 private:
     void setupWindow();
@@ -39,11 +40,13 @@ private:
     std::vector<DrawerData> m_drawers_data;
     std::unique_ptr<Drawer> m_drawer;
     std::unique_ptr<ReceiptManager> m_receipt_manager;
+    std::unique_ptr<ClientManager> m_cManager;
 
     DBHandler handler;
 
     //QAction* m_reset;
     QAction* m_receipt;
+    QAction* m_clientView;
 };
 
 #endif // MAINWINDOW_H

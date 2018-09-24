@@ -1,5 +1,7 @@
 #include "clientmanager.h"
 
+//writing new data is corrupting client file
+
 ClientManager::ClientManager(QWidget *parent) : QWidget(parent)
 {
 
@@ -14,7 +16,6 @@ void ClientManager::saveClients(std::vector<client>& clients)
     }
 
     QJsonObject object;
-    object["size"] = static_cast<int>(clients.size());
     for(uint i = 0; i < clients.size(); i++)
     {
         QString id = QString::number(i);
@@ -48,14 +49,8 @@ void ClientManager::loadClients(std::vector<client>& clients)
     QJsonDocument document = QJsonDocument::fromJson(raw_data);
     QJsonObject object = document.object();
 
-    size_t nbr_clients = 0;
-    if(object.contains("size") && object["size"].isDouble())
-    {
-        nbr_clients = object["size"].isDouble();
-        qDebug() << QString::number(nbr_clients);
-    }
 
-    for(size_t i = 0; i < nbr_clients; i++)
+    for(size_t i = 0; i < 100; i++)
     {
         client client;
         QString id = QString::number(i);
@@ -65,38 +60,42 @@ void ClientManager::loadClients(std::vector<client>& clients)
             QJsonObject json = object[id].toObject();
             if(json.contains("name") && json["name"].isString())
             {
-                client.name = json["name"].isString();
+                client.name = json["name"].toString();
             }
 
             if(json.contains("surname") && json["surname"].isString())
             {
-                client.surname = json["surname"].isString();
+                client.surname = json["surname"].toString();
             }
 
             if(json.contains("address") && json["address"].isString())
             {
-                client.address = json["address"].isString();
+                client.address = json["address"].toString();
             }
 
             if(json.contains("zip") && json["zip"].isString())
             {
-                client.zip = json["zip"].isString();
+                client.zip = json["zip"].toString();
             }
 
             if(json.contains("city") && json["city"].isString())
             {
-                client.city = json["city"].isString();
+                client.city = json["city"].toString();
             }
 
             if(json.contains("phone") && json["phone"].isString())
             {
-                client.phone = json["phone"].isString();
+                client.phone = json["phone"].toString();
             }
 
             if(json.contains("email") && json["email"].isString())
             {
-                client.email = json["email"].isString();
+                client.email = json["email"].toString();
             }
+        }
+        else
+        {
+            break;
         }
 
         clients.push_back(client);
@@ -140,8 +139,18 @@ void ClientManager::viewer(Client usage, std::shared_ptr<client> holder)
 
 void ClientManager::selectClient( std::vector<client> clients, std::shared_ptr<client> holder, const QModelIndex& index)
 {
-    holder = std::make_shared<client>(clients[static_cast<size_t>(index.row())]);
-    qDebug() << "client " + clients[static_cast<size_t>(index.row())].name;
+    holder->name = clients[static_cast<size_t>(index.row())].name;
+    holder->surname = clients[static_cast<size_t>(index.row())].surname;
+    holder->address = clients[static_cast<size_t>(index.row())].address;
+    holder->city = clients[static_cast<size_t>(index.row())].city;
+    holder->email = clients[static_cast<size_t>(index.row())].email;
+    holder->phone = clients[static_cast<size_t>(index.row())].phone;
+    holder->zip = clients[static_cast<size_t>(index.row())].zip;
+
+    qDebug() << "client " + holder->name;
+
+    emit clientSelected();
+
     close();
 }
 

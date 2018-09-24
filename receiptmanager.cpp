@@ -2,10 +2,26 @@
 
 ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
 {
+    m_tmpClient = std::make_shared<client>();
+
+    buildHeaderBox();
+
     title = new QLabel("PRISE EN CHARGE DU MATERIEL EN SERVICE APRES VENTE");
+    {
+        QFont f = title->font();
+        f.setPointSize(10);
+        title->setFont(f);
+    }
+    title->setContentsMargins(80, 0, 0, 0);
     buildClientBox();
 
     subtitle = new QLabel("Identification du Matériel et panne constatée");
+    {
+        QFont f = subtitle->font();
+        f.setPointSize(10);
+        subtitle->setFont(f);
+    }
+    subtitle->setContentsMargins(20, 0, 0, 0);
     buildDepositBox();
 
     receipt_title = new QLabel("--------------------------------------------------");
@@ -13,18 +29,34 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
     receipt_title->setContentsMargins(0, 20, 0, 20);
     buildClientReceiptBox();
 
+    footer = new QLabel("Un devis sera proposé pour toute réparation supérieure à 50% de la valeur neuve de l'appareil ou à "
+                        "partir de 150€ TTC.\nLes devis sont payants, la somme demandée en acompte couvre les frais de démontage,"
+                        "de diagnostic de panne, etc... "
+                        "Les frais de devis seront à\ndéduire sur acceptation de celui-ci. Tout devis n'est valable qu'un mois et les "
+                        "tarifs peuvent êtres modifiées à tous moments.\n"
+                        "Tout refus de devis avec récupération du matériel sera facturé 23€ TTC.");
+    {
+        QFont f = footer->font();
+        f.setPointSize(6);
+        footer->setFont(f);
+    }
+
     m_print = new QPushButton;
     m_print->setText(tr("Imprimer"));
     m_print->setToolTip(tr("Imprimer la page"));
     connect(m_print, SIGNAL(clicked()), this, SLOT(print()));
 
     QVBoxLayout* container = new QVBoxLayout;
+    container->addLayout(header);
+    container->addSpacing(10);
     container->addWidget(title);
     container->addWidget(client_box);
+    container->addSpacing(10);
     container->addWidget(subtitle);
     container->addWidget(deposit_box);
     container->addWidget(receipt_title);
     container->addWidget(receipt_box);
+    container->addWidget(footer);
     container->addWidget(m_print);
 
     QFile file(":/stylesheets/printstyle.qss");
@@ -35,6 +67,18 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
     setStyleSheet(StyleSheet);
     setFixedSize(673, 950);
     setLayout(container);
+}
+
+void ReceiptManager::buildHeaderBox()
+{
+    QLabel* address_jks = new QLabel("STE JKS-informatique - 10 RUE DU Maréchal FOCH - 67380 LINGOLSHEIM");
+    QLabel* email_jks = new QLabel("Courriel: info@jks-informatique.com             Tel: 03.69.81.82.11");
+
+    header = new QVBoxLayout;
+    header->addWidget(address_jks);
+    header->addSpacing(2);
+    header->addWidget(email_jks);
+    header->setContentsMargins(100, 0, 20, 0);
 }
 
 void ReceiptManager::buildClientBox()
@@ -195,6 +239,10 @@ void ReceiptManager::buildClientReceiptBox()
 
 void ReceiptManager::print()
 {
+    m_print->setVisible(false);
+    m_client->setVisible(false);
+    m_save_client->setVisible(false);
+
     QPrinter printer;
 
     QPrintDialog dialog(&printer, this);
@@ -202,6 +250,9 @@ void ReceiptManager::print()
 
     if (dialog.exec() != QDialog::Accepted)
     {
+        m_print->setVisible(true);
+        m_client->setVisible(true);
+        m_save_client->setVisible(true);
         return;
     }
 
@@ -210,22 +261,30 @@ void ReceiptManager::print()
     this->render(&painter);
 
     painter.end();
+
+    m_print->setVisible(true);
+    m_client->setVisible(true);
+    m_save_client->setVisible(true);
 }
 
 void ReceiptManager::fillClient()
 {
-    client tmp;
     m_cManager.reset();
     m_cManager = std::make_unique<ClientManager>();
-    m_cManager->viewer(Client::FETCH_CLIENT, std::make_shared<client>(tmp));
+    m_cManager->viewer(Client::FETCH_CLIENT, m_tmpClient);
 
-    name->setText(tmp.name);
-    surname->setText(tmp.surname);
-    address->setText(tmp.address);
-    postal_code->setText(tmp.zip);
-    city->setText(tmp.city);
-    phone->setText(tmp.phone);
-    email->setText(tmp.email);
+    connect(m_cManager.get(), SIGNAL(clientSelected()), this, SLOT(updateClient()));
+}
+
+void ReceiptManager::updateClient()
+{
+    name->setText(m_tmpClient->name);
+    surname->setText(m_tmpClient->surname);
+    address->setText(m_tmpClient->address);
+    postal_code->setText(m_tmpClient->zip);
+    city->setText(m_tmpClient->city);
+    phone->setText(m_tmpClient->phone);
+    email->setText(m_tmpClient->email);
 }
 
 void ReceiptManager::saveClient()

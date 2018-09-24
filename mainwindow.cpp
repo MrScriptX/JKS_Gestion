@@ -102,6 +102,10 @@ void MainWindow::createAction()
     m_receipt = menuBar()->addAction(tr("Receipt"));
     m_receipt->setToolTip(tr("Nouveau recepisse client"));
     connect(m_receipt, &QAction::triggered, this, &MainWindow::receipt);
+
+    m_clientView = menuBar()->addAction(tr("Client"));
+    m_clientView->setToolTip(tr("Voir les clients"));
+    connect(m_clientView, &QAction::triggered, this, &MainWindow::clientViewer);
 }
 
 void MainWindow::openDrawer(uint32_t i)
@@ -133,4 +137,11 @@ void MainWindow::receipt()
     m_receipt_manager.reset();
     m_receipt_manager = std::make_unique<ReceiptManager>();
     m_receipt_manager->show();
+}
+
+void MainWindow::clientViewer()
+{
+    m_cManager.reset();
+    m_cManager = std::make_unique<ClientManager>();
+    m_cManager->viewer(Client::VIEW_CLIENT, nullptr);
 }

@@ -41,9 +41,10 @@ public:
     void saveClients(std::vector<client>& clients);
     void loadClients(std::vector<client>& clients);
 
-    void viewer(Client usage, std::shared_ptr<client> holder = nullptr);
+    void viewer(Client usage, std::shared_ptr<client> holder);
     void saveClient(client& c);
 signals:
+    void clientSelected();
 
 public slots:
     void selectClient( std::vector<client> clients, std::shared_ptr<client> holder, const QModelIndex& index);

@@ -29,11 +29,16 @@ public slots:
     void print();
     void fillClient();
     void saveClient();
+    void updateClient();
 
 private:
+    void buildHeaderBox();
     void buildClientBox();
     void buildDepositBox();
     void buildClientReceiptBox();
+
+    QVBoxLayout* header;
+    QLabel* footer;
 
     QLabel* title;
     QGroupBox* client_box;
@@ -88,6 +93,7 @@ private:
     QPushButton* m_save_client;
 
     std::unique_ptr<ClientManager> m_cManager;
+    std::shared_ptr<client> m_tmpClient;
 };
 
 #endif // RECEIPTMANAGER_H
