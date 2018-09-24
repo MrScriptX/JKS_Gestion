@@ -30,14 +30,13 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
     buildClientReceiptBox();
 
     footer = new QLabel("Un devis sera proposé pour toute réparation supérieure à 50% de la valeur neuve de l'appareil ou à "
-                        "partir de 150€ TTC.\nLes devis sont payants, la somme demandée en acompte couvre les frais de démontage,"
-                        "de diagnostic de panne, etc... "
-                        "Les frais de devis seront à\ndéduire sur acceptation de celui-ci. Tout devis n'est valable qu'un mois et les "
+                        "partir de\n150€ TTC. Les devis sont payants, la somme demandée en acompte couvre les frais de démontage, "
+                        "de\ndiagnostic de panne, etc... Les frais de devis seront à déduire sur acceptation de celui-ci. Tout devis n'est valable\nqu'un mois et les "
                         "tarifs peuvent êtres modifiées à tous moments.\n"
                         "Tout refus de devis avec récupération du matériel sera facturé 23€ TTC.");
     {
         QFont f = footer->font();
-        f.setPointSize(6);
+        f.setPointSize(8);
         footer->setFont(f);
     }
 
@@ -78,7 +77,7 @@ void ReceiptManager::buildHeaderBox()
     header->addWidget(address_jks);
     header->addSpacing(2);
     header->addWidget(email_jks);
-    header->setContentsMargins(100, 0, 20, 0);
+    header->setContentsMargins(100, 0, 0, 0);
 }
 
 void ReceiptManager::buildClientBox()
