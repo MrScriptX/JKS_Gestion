@@ -57,7 +57,7 @@ signals:
 
 public slots:
     void selectClient( std::vector<client> clients, std::shared_ptr<client> holder, const QModelIndex& index);
-    void searchClient(const QString& name);
+    void searchClient(const QString& name, QStringListModel* model);
 
 private:
 

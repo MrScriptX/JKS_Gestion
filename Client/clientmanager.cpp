@@ -158,6 +158,7 @@ void ClientManager::clientSelector(std::shared_ptr<client> holder)
 
     QLineEdit* search_bar = new QLineEdit;
     QPushButton* search_button = new QPushButton("Find");
+    connect(search_button, &QPushButton::clicked, this, [this, search_bar, model]{this->searchClient(search_bar->text(), model);});
 
     QVBoxLayout* wrapper = new QVBoxLayout;
     wrapper->addWidget(m_view);
@@ -185,9 +186,26 @@ void ClientManager::selectClient( std::vector<client> clients, std::shared_ptr<c
     close();
 }
 
-void ClientManager::searchClient(const QString& name)
+void ClientManager::searchClient(const QString& name, QStringListModel* model)
 {
+    QStringList unordered_list;
+    unordered_list = model->stringList();
 
+    QStringList ordered_list;
+
+    for(size_t i = 0; i < static_cast<size_t>(unordered_list.size()); i++)
+    {
+        if(unordered_list[static_cast<int>(i)].contains(name, Qt::CaseInsensitive))
+        {
+            ordered_list.push_front(unordered_list[static_cast<int>(i)]);
+        }
+        else
+        {
+            ordered_list.push_back(unordered_list[static_cast<int>(i)]);
+        }
+    }
+
+    model->setStringList(ordered_list);
 }
 
 void ClientManager::saveClient(client& c)
