@@ -6,7 +6,15 @@
 #include <QJsonArray>
 #include <QFile>
 #include <QWidget>
+#include <QLineEdit>
+#include <QTableView>
+#include <QPushButton>
 #include <QVBoxLayout>
+#include <QStringList>
+#include <QHeaderView>
+#include <QTableWidget>
+#include <QStandardItem>
+#include <QStandardItemModel>
 #include <QStringListModel>
 #include <QListView>
 #include <QPushButton>
@@ -41,13 +49,15 @@ public:
     void saveClients(std::vector<client>& clients);
     void loadClients(std::vector<client>& clients);
 
-    void viewer(Client usage, std::shared_ptr<client> holder);
+    void tableViewer();
+    void clientSelector(std::shared_ptr<client> holder);
     void saveClient(client& c);
 signals:
     void clientSelected();
 
 public slots:
     void selectClient( std::vector<client> clients, std::shared_ptr<client> holder, const QModelIndex& index);
+    void searchClient(const QString& name);
 
 private:
 

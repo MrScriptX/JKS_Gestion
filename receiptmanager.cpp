@@ -6,7 +6,7 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
 
     buildHeaderBox();
 
-    title = new QLabel("PRISE EN CHARGE DU MATERIEL EN SERVICE APRES VENTE");
+    title = new QLabel(tr("PRISE EN CHARGE DU MATERIEL EN SERVICE APRES VENTE"));
     {
         QFont f = title->font();
         f.setPointSize(10);
@@ -15,7 +15,7 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
     title->setContentsMargins(80, 0, 0, 0);
     buildClientBox();
 
-    subtitle = new QLabel("Identification du Matériel et panne constatée");
+    subtitle = new QLabel(tr("Identification du Matériel et panne constatée"));
     {
         QFont f = subtitle->font();
         f.setPointSize(10);
@@ -29,11 +29,11 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
     receipt_title->setContentsMargins(0, 20, 0, 20);
     buildClientReceiptBox();
 
-    footer = new QLabel("Un devis sera proposé pour toute réparation supérieure à 50% de la valeur neuve de l'appareil ou à "
+    footer = new QLabel(tr("Un devis sera proposé pour toute réparation supérieure à 50% de la valeur neuve de l'appareil ou à "
                         "partir de\n150€ TTC. Les devis sont payants, la somme demandée en acompte couvre les frais de démontage, "
                         "de\ndiagnostic de panne, etc... Les frais de devis seront à déduire sur acceptation de celui-ci. Tout devis n'est valable\nqu'un mois et les "
                         "tarifs peuvent êtres modifiées à tous moments.\n"
-                        "Tout refus de devis avec récupération du matériel sera facturé 23€ TTC.");
+                        "Tout refus de devis avec récupération du matériel sera facturé 23€ TTC."));
     {
         QFont f = footer->font();
         f.setPointSize(8);
@@ -70,8 +70,8 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
 
 void ReceiptManager::buildHeaderBox()
 {
-    QLabel* address_jks = new QLabel("STE JKS-informatique - 10 RUE DU Maréchal FOCH - 67380 LINGOLSHEIM");
-    QLabel* email_jks = new QLabel("Courriel: info@jks-informatique.com             Tel: 03.69.81.82.11");
+    QLabel* address_jks = new QLabel(tr("STE JKS-informatique - 10 RUE DU Maréchal FOCH - 67380 LINGOLSHEIM"));
+    QLabel* email_jks = new QLabel(tr("Courriel: info@jks-informatique.com             Tel: 03.69.81.82.11"));
 
     header = new QVBoxLayout;
     header->addWidget(address_jks);
@@ -270,7 +270,7 @@ void ReceiptManager::fillClient()
 {
     m_cManager.reset();
     m_cManager = std::make_unique<ClientManager>();
-    m_cManager->viewer(Client::FETCH_CLIENT, m_tmpClient);
+    m_cManager->clientSelector(m_tmpClient);
 
     connect(m_cManager.get(), SIGNAL(clientSelected()), this, SLOT(updateClient()));
 }

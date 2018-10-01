@@ -143,5 +143,5 @@ void MainWindow::clientViewer()
 {
     m_cManager.reset();
     m_cManager = std::make_unique<ClientManager>();
-    m_cManager->viewer(Client::VIEW_CLIENT, nullptr);
+    m_cManager->tableViewer();
 }

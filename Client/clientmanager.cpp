@@ -1,6 +1,5 @@
 #include "clientmanager.h"
 
-//writing new data is corrupting client file
 
 ClientManager::ClientManager(QWidget *parent) : QWidget(parent)
 {
@@ -104,7 +103,42 @@ void ClientManager::loadClients(std::vector<client>& clients)
     file.close();
 }
 
-void ClientManager::viewer(Client usage, std::shared_ptr<client> holder)
+void ClientManager::tableViewer()
+{
+    std::vector<client> clients;
+    loadClients(clients);
+
+    QTableView* tableView = new QTableView;
+    QStandardItemModel* model = new QStandardItemModel;
+
+    for(size_t i = 0; i < clients.size(); i++)
+    {
+        QStandardItem* name = new QStandardItem;
+        name->setText(clients[i].surname + " " + clients[i].name);
+        name->setEditable(false);
+        model->setItem(static_cast<int>(i), 0, name);
+
+        QStandardItem* tel = new QStandardItem;
+        tel->setText(clients[i].phone);
+        tel->setEditable(false);
+        model->setItem(static_cast<int>(i), 1, tel);
+
+        QStandardItem* address = new QStandardItem;
+        address->setText(clients[i].address + " " + clients[i].city);
+        address->setEditable(false);
+        model->setItem(static_cast<int>(i), 2, address);
+    }
+
+
+    tableView->setModel(model);
+    tableView->resizeRowsToContents();
+    tableView->horizontalHeader()->setStretchLastSection(true);
+    tableView->setMinimumSize(800, 200);
+    tableView->setFocus();
+    tableView->show();
+}
+
+void ClientManager::clientSelector(std::shared_ptr<client> holder)
 {
     std::vector<client> clients;
     loadClients(clients);
@@ -120,18 +154,15 @@ void ClientManager::viewer(Client usage, std::shared_ptr<client> holder)
 
     m_view = new QListView;
     m_view->setModel(model);
+    connect(m_view, &QListView::doubleClicked, this, [this, clients, holder](const QModelIndex& index){ this->selectClient(clients, holder, index); });
 
-    if(usage == Client::FETCH_CLIENT)
-    {
-        connect(m_view, &QListView::doubleClicked, this, [this, clients, holder](const QModelIndex& index){ this->selectClient(clients, holder, index); });
-    }
-    else if(usage != Client::VIEW_CLIENT)
-    {
-        qDebug() << "Usage mode is invalid !";
-    }
+    QLineEdit* search_bar = new QLineEdit;
+    QPushButton* search_button = new QPushButton("Find");
 
     QVBoxLayout* wrapper = new QVBoxLayout;
     wrapper->addWidget(m_view);
+    wrapper->addWidget(search_bar);
+    wrapper->addWidget(search_button);
 
     setLayout(wrapper);
     show();
@@ -152,6 +183,11 @@ void ClientManager::selectClient( std::vector<client> clients, std::shared_ptr<c
     emit clientSelected();
 
     close();
+}
+
+void ClientManager::searchClient(const QString& name)
+{
+
 }
 
 void ClientManager::saveClient(client& c)
