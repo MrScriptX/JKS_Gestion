@@ -31,6 +31,7 @@ public slots:
     void updateMain();
     void receipt();
     void clientViewer();
+    void addClient();
 
 private:
     void setupWindow();
@@ -47,6 +48,8 @@ private:
     //QAction* m_reset;
     QAction* m_receipt;
     QAction* m_clientView;
+    QAction* m_add_client;
+    QMenu* m_client_menu;
 };
 
 #endif // MAINWINDOW_H

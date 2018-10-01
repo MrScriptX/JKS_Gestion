@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.7.1, 2018-10-01T12:57:55. -->
+<!-- Written by QtCreator 4.7.1, 2018-10-01T14:06:38. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -116,7 +116,7 @@
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.BuildSteps.Clean</value>
     </valuemap>
     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">2</value>
-    <value type="bool" key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment">true</value>
+    <value type="bool" key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment">false</value>
     <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges">
      <value type="QString">QT_AUTO_SCREEN_SCALE_FACTOR=auto</value>
      <value type="QString">QT_DEVICE_PIXEL_RATIO</value>
