@@ -177,6 +177,18 @@ void MainWindow::addClient()
     QPushButton* validate = new QPushButton;
     validate->setText(tr("Validez"));
     connect(validate, &QPushButton::clicked, this, [this, window, surname, name, address, zip, city, phone, email]{
+        switch( QMessageBox::question(window, tr("Attention"),
+                    tr("Voulez-vous vraiment AJOUTER ce nouveau clients ?"),
+                    QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
+        {
+          case QMessageBox::Yes:
+            break;
+          case QMessageBox::No:
+            return;
+          default:
+            return;
+        }
+
         client client;
         client.surname = surname->text();
         client.name = name->text();
