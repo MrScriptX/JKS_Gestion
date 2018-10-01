@@ -124,7 +124,7 @@ void ClientManager::tableViewer()
         model->setItem(static_cast<int>(i), 1, tel);
 
         QStandardItem* address = new QStandardItem;
-        address->setText(clients[i].address + " " + clients[i].city);
+        address->setText(clients[i].address + ", " + clients[i].city + " " + clients[i].zip);
         address->setEditable(false);
         model->setItem(static_cast<int>(i), 2, address);
     }
