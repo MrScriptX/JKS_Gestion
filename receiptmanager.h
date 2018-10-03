@@ -30,12 +30,14 @@ public slots:
     void fillClient();
     void saveClient();
     void updateClient();
+    //void autofill(QLineEdit& widget);
 
 private:
     void buildHeaderBox();
     void buildClientBox();
     void buildDepositBox();
     void buildClientReceiptBox();
+    void buildDynamics();//connect func
 
     QVBoxLayout* header;
     QLabel* footer;
@@ -81,8 +83,10 @@ private:
 
     QLabel* date_depl;//date deposit
     QLineEdit* date_dep;
-    QLabel* name_surl;//name and surname
-    QLineEdit* name_sur;
+    QLabel* csurnamel;//surname for client part
+    QLineEdit* csurname;
+    QLabel* cnamel;//name for client part
+    QLineEdit* cname;
     QLabel* mat_type_bisl;
     QLineEdit* mat_type_bis;
     QLabel* brandl;

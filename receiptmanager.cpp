@@ -63,6 +63,8 @@ ReceiptManager::ReceiptManager(QWidget *parent) : QWidget(parent)
     QString StyleSheet = QLatin1String(file.readAll());
     file.close();
 
+    buildDynamics();
+
     setStyleSheet(StyleSheet);
     setFixedSize(673, 950);
     setLayout(container);
@@ -209,11 +211,15 @@ void ReceiptManager::buildClientReceiptBox()
     date_lt->addWidget(date_depl);
     date_lt->addWidget(date_dep);
 
-    name_surl = new QLabel(tr("Nom et prénom : "));
-    name_sur = new QLineEdit;
+    csurnamel = new QLabel(tr("Nom : "));
+    csurname = new QLineEdit;
+    cnamel = new QLabel(tr("Prénom : "));
+    cname = new QLineEdit;
     QHBoxLayout* name_lt = new QHBoxLayout;
-    name_lt->addWidget(name_surl);
-    name_lt->addWidget(name_sur);
+    name_lt->addWidget(csurnamel);
+    name_lt->addWidget(csurname);
+    name_lt->addWidget(cnamel);
+    name_lt->addWidget(cname);
 
     mat_type_bisl = new QLabel(tr("Type matériel : "));
     mat_type_bis = new QLineEdit;
@@ -234,6 +240,14 @@ void ReceiptManager::buildClientReceiptBox()
     receipt_box = new QGroupBox;
     receipt_box->setTitle("Recepisse Client");
     receipt_box->setLayout(container);
+}
+
+void ReceiptManager::buildDynamics()
+{
+    connect(date, &QLineEdit::editingFinished, [this]{date_dep->setText(date->text());});
+    connect(name, &QLineEdit::editingFinished, [this]{cname->setText(name->text());});
+    connect(surname, &QLineEdit::editingFinished, [this]{csurname->setText(surname->text());});
+    connect(mat_type, &QLineEdit::editingFinished, [this]{mat_type_bis->setText(mat_type->text());});
 }
 
 void ReceiptManager::print()
