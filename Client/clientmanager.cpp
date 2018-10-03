@@ -149,6 +149,18 @@ void ClientManager::tableViewer()
         this->saveClients(m_clients);
     });
 
+    tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(tableView, &QTableView::customContextMenuRequested, [this, tableView, model](const QPoint& pos){
+        QModelIndex index = tableView->indexAt(pos);
+
+        QAction* del = new QAction(tr("supprimer"), this);
+        connect(del, &QAction::triggered, [this, index, model]{this->deleteClient(index.row()); model->removeRow(index.row());});
+
+        QMenu* menu = new QMenu(this);
+        menu->addAction(del);
+        menu->popup(tableView->viewport()->mapToGlobal(pos));
+    });
+
     tableView->setModel(model);
     tableView->resizeRowsToContents();
     tableView->horizontalHeader()->setStretchLastSection(true);
@@ -234,4 +246,22 @@ void ClientManager::saveClient(client& c)
 
     clients.push_back(c);
     saveClients(clients);
+}
+
+void ClientManager::deleteClient(int index)
+{
+    std::vector<client> clients;
+    loadClients(clients);
+
+
+    std::vector<client> new_clients;
+    for(size_t i = 0; i < clients.size(); i++)
+    {
+        if(static_cast<int>(i) != index)
+        {
+            new_clients.push_back(clients[i]);
+        }
+    }
+
+    saveClients(new_clients);
 }

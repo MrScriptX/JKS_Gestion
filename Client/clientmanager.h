@@ -19,6 +19,8 @@
 #include <QListView>
 #include <QPushButton>
 #include <QDebug>
+#include <QMenu>
+#include <QAction>
 #include <vector>
 #include <memory>
 
@@ -50,9 +52,11 @@ public:
     void loadClients(std::vector<client>& clients);
 
     void tableViewer();
+
     void clientSelector(std::shared_ptr<client> holder);
     void saveClient(client& c);
     void saveClient(std::vector<client> clients);
+    void deleteClient(int index);
 signals:
     void clientSelected();
 
