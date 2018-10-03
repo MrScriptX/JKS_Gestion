@@ -11,9 +11,12 @@
 #include <QMenu>
 #include <QAction>
 #include <QContextMenuEvent>
+#include <QMenuBar>
+#include <QDebug>
 
 #include "drawer.h"
 #include "dbhandler.h"
+#include "receiptmanager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -26,17 +29,27 @@ signals:
 public slots:
     void openDrawer(uint32_t i);
     void updateMain();
+    void receipt();
+    void clientViewer();
+    void addClient();
 
 private:
     void setupWindow();
+    void createAction();
 
     std::vector<QPushButton*> m_drawers;
     std::vector<DrawerData> m_drawers_data;
     std::unique_ptr<Drawer> m_drawer;
+    std::unique_ptr<ReceiptManager> m_receipt_manager;
+    std::unique_ptr<ClientManager> m_cManager;
 
     DBHandler handler;
 
-    QAction* m_reset;
+    //QAction* m_reset;
+    QAction* m_receipt;
+    QAction* m_clientView;
+    QAction* m_add_client;
+    QMenu* m_client_menu;
 };
 
 #endif // MAINWINDOW_H

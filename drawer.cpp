@@ -1,5 +1,9 @@
 #include "drawer.h"
 
+
+//while in edit mode: set text color to black or white and adjust background color
+//warning box button are too small, adjust their size
+
 Drawer::Drawer(QWidget *parent) : QWidget(parent)
 {
     client_aware = true;
@@ -16,6 +20,8 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     status->addItem("REPARE");
     status->setCurrentIndex(static_cast<int>(Status::EMPTY));
     status->setEnabled(false);
+    status->setFixedHeight(30);
+    status->setFixedWidth(230);
 
     client_awarness = new QLabel;
     QPixmap awarness_ico = QPixmap::fromImage(QImage(":/image/check_ico.png"));
@@ -45,26 +51,54 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     status_box->setLayout(status_layout);
 
 
+    called = new QPushButton;
+    called->setText("Appel fait");
+    called->setFixedHeight(40);
+    called->setFixedWidth(120);
+    connect(called, SIGNAL(clicked()), this, SLOT(callClient()));
+
+    last_call = new QDateEdit;
+    last_call->setReadOnly(true);
+    last_call->setFixedHeight(40);
+    last_call->setFixedWidth(120);
+
+    view_calls = new QPushButton;
+    view_calls->setText("Voir appel");
+    view_calls->setFixedHeight(40);
+    view_calls->setFixedWidth(120);
+    connect(view_calls, SIGNAL(clicked()), this, SLOT(call_viewer()));
+
+
+    QVBoxLayout* call_layout = new QVBoxLayout;
+    call_layout->addWidget(called);
+    call_layout->addWidget(last_call);
+    call_layout->addWidget(view_calls);
+
+    QGroupBox* call_box = new QGroupBox;
+    call_box->setTitle("Rappel client");
+    call_box->setLayout(call_layout);
+
+
 
     name = new QLineEdit;
     name->setMaximumWidth(300);
     name->setFrame(false);
     name->setReadOnly(true);
-    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_name = new QLabel("Nom : ");
 
     surname = new QLineEdit;
     surname->setMaximumWidth(300);
     surname->setFrame(false);
     surname->setReadOnly(true);
-    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_surname = new QLabel("Prenom : ");
 
     contact = new QLineEdit;
     contact->setMaximumWidth(300);
     contact->setFrame(false);
     contact->setReadOnly(true);
-    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_contact = new QLabel("Contact : ");
 
 
@@ -72,12 +106,12 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     deposit_date->setMaximumWidth(200);
     deposit_date->setFrame(false);
     deposit_date->setReadOnly(true);
-    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_deposit_date = new QLabel("Date de dépot : ");
 
     breakdown = new QTextEdit;
     breakdown->setReadOnly(true);
-    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QHBoxLayout* breakdown_layout = new QHBoxLayout;
     breakdown_layout->addWidget(breakdown);
     QGroupBox* l_breakdown = new QGroupBox;
@@ -87,7 +121,7 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
 
     complement_info = new QTextEdit;
     complement_info->setReadOnly(true);
-    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QHBoxLayout* complement_info_layout = new QHBoxLayout;
     complement_info_layout->addWidget(complement_info);
     QGroupBox* l_complement_info = new QGroupBox;
@@ -97,7 +131,7 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
 
     repair = new QTextEdit;
     repair->setReadOnly(true);
-    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QHBoxLayout* repair_layout = new QHBoxLayout;
     repair_layout->addWidget(repair);
     QGroupBox* l_repair = new QGroupBox;
@@ -106,7 +140,7 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
 
     comments = new QTextEdit;
     comments->setReadOnly(true);
-    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QHBoxLayout* comments_layout = new QHBoxLayout;
     comments_layout->addWidget(comments);
     QGroupBox* l_comments = new QGroupBox;
@@ -117,23 +151,44 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     price->setMaximumWidth(200);
     price->setFrame(false);
     price->setReadOnly(true);
-    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); border : 0;}");
     QLabel* l_price = new QLabel("Prix : ");
+
+    QHBoxLayout* price_layout = new QHBoxLayout;
+    price_layout->addWidget(l_price);
+    price_layout->addWidget(price);
+    price_layout->addStretch();
+
+    reset_drawer = new QPushButton;
+    reset_drawer->setText("Reset");
+    reset_drawer->setFixedHeight(40);
+    reset_drawer->setFixedWidth(100);
+    connect(reset_drawer, SIGNAL(clicked()), this, SLOT(reset()));
+
+    QHBoxLayout* bottom_part = new QHBoxLayout;
+    bottom_part->addLayout(price_layout);
+    bottom_part->addWidget(reset_drawer);
 
 
     modify = new QPushButton;
     modify->setText("Editer");
     modify->setDisabled(false);
+    modify->setFixedHeight(40);
+    modify->setFixedWidth(100);
     connect(modify, SIGNAL(clicked()), this, SLOT(setEditable()));
 
     save = new QPushButton;
     save->setText("Sauvegarder");
     save->setDisabled(true);
+    save->setFixedHeight(40);
+    save->setFixedWidth(100);
     connect(save, SIGNAL(clicked()), this, SLOT(saveChange()));
 
     discard = new QPushButton;
     discard->setText("Annuler");
     discard->setDisabled(true);
+    discard->setFixedHeight(40);
+    discard->setFixedWidth(100);
     connect(discard, SIGNAL(clicked()), this, SLOT(discardChange()));
 
     QVBoxLayout* action_layout = new QVBoxLayout;
@@ -173,13 +228,8 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     QHBoxLayout* top_part = new QHBoxLayout;
     top_part->addLayout(personal_info);
     top_part->addWidget(status_box);
+    top_part->addWidget(call_box);
     top_part->addLayout(action_layout);
-
-
-    QHBoxLayout* price_layout = new QHBoxLayout;
-    price_layout->addWidget(l_price);
-    price_layout->addWidget(price);
-    price_layout->addStretch();
 
 
     QVBoxLayout* window = new QVBoxLayout;
@@ -188,9 +238,63 @@ Drawer::Drawer(QWidget *parent) : QWidget(parent)
     window->addWidget(l_complement_info);
     window->addWidget(l_repair);
     window->addWidget(l_comments);
-    window->addLayout(price_layout);
+    window->addLayout(bottom_part);
 
     setLayout(window);
+}
+
+void Drawer::call_viewer()
+{
+    if(m_viewer != nullptr)
+    {
+        m_viewer.reset();
+    }
+
+    QString tmp = "computer" + QString::number(m_id) + ".json";
+    m_viewer = std::make_unique<CallViewer>();
+    m_viewer->setup(tmp);
+    m_viewer->load(m_call_data);
+}
+
+void Drawer::reset()
+{
+    if(!warning("Voulez-vous vraiment EFFACER les données du casier ?"))
+    {
+        return;
+    }
+
+    status->setCurrentIndex(0);
+    client_awarness_edit->setCurrentIndex(0);
+
+    name->setText("");
+    surname->setText("");
+    contact->setText("");
+    deposit_date->setText("");
+    breakdown->setText("");
+    complement_info->setText("");
+    repair->setText("");
+    comments->setText("");
+    price->setText("");
+
+    m_data->setStatus(status->currentIndex());
+    m_data->setClient_awarness(client_awarness_edit->currentIndex());
+    m_data->setName(name->text());
+    m_data->setSurname(surname->text());
+    m_data->setContact(contact->text());
+    m_data->setDeposit_date(deposit_date->text());
+    m_data->setBreakdown(breakdown->toPlainText());
+    m_data->setComplementary_info(complement_info->toPlainText());
+    m_data->setRepairs(repair->toPlainText());
+    m_data->setComments(comments->toPlainText());
+    m_data->setPrice(price->text());
+
+    m_call_data.dates().clear();
+
+    DBHandler handler;
+    QString file_name = "data/computer" + QString::number(m_id) + ".json";
+    handler.saveContactData(file_name, &m_call_data);
+
+    emit updated();
 }
 
 void Drawer::setup(const int& id, DrawerData& data)
@@ -224,22 +328,22 @@ void Drawer::loadData(const DrawerData& data)
     repair->setText(data.getRepairs());
     comments->setText(data.getComments());
     price->setText(data.getPrice());
+
+    DBHandler handler;
+    QString file_name = "data/computer" + QString::number(m_id) + ".json";
+    handler.loadContactData(file_name, &m_call_data);
+
+    if(!m_call_data.dates().empty())//check if vector is empty
+    {
+        last_call->setDate(m_call_data.dates().back());
+    }
 }
 
 void Drawer::saveChange()
 {
-    switch( QMessageBox::question(this, tr("Attention"),
-                tr("Voulez-vous vraiment SAUVEGARDER vos changements ?"),
-                QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
+    if(!warning("Voulez-vous vraiment SAUVEGARDER vos changements ?"))
     {
-      case QMessageBox::Yes:
-        qWarning("Yes selected !");
-        break;
-      case QMessageBox::No:
         return;
-      default:
-        qWarning("Unexpected error occured ! Operation aborted !");
-        break;
     }
 
     m_data->setStatus(status->currentIndex());
@@ -254,10 +358,6 @@ void Drawer::saveChange()
     m_data->setComments(comments->toPlainText());
     m_data->setPrice(price->text());
 
-    status->setEnabled(false);
-    client_awarness->setVisible(true);
-    client_awarness_edit->setVisible(false);
-
     if(client_awarness_edit->currentIndex() == 0)
     {
         QPixmap map = QPixmap::fromImage(QImage(":/image/check_ico.png"));
@@ -269,155 +369,72 @@ void Drawer::saveChange()
         client_awarness->setPixmap(map);
     }
 
-    name->setFrame(false);
-    name->setReadOnly(true);
-    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    surname->setFrame(false);
-    surname->setReadOnly(true);
-    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    contact->setFrame(false);
-    contact->setReadOnly(true);
-    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    deposit_date->setFrame(false);
-    deposit_date->setReadOnly(true);
-    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    price->setFrame(false);
-    price->setReadOnly(true);
-    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    breakdown->setReadOnly(true);
-    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    complement_info->setReadOnly(true);
-    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    repair->setReadOnly(true);
-    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    comments->setReadOnly(true);
-    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    modify->setText("Editer");
-    modify->setDisabled(false);
-
-    save->setText("Sauvergarder");
-    save->setDisabled(true);
-
-    discard->setText("Annuler");
-    discard->setDisabled(true);
-
-    update();
+    setReadMode();
     emit updated();
+}
+
+void Drawer::callClient()
+{
+    if(!warning("Confirmez-vous avoir PASSEZ UN APPEL au client ?"))
+    {
+        return;
+    }
+
+    last_call->setDate(QDate::currentDate());
+    m_call_data.dates().push_back(last_call->date());
+
+    DBHandler handler;
+    QString file_name = "data/computer" + QString::number(m_id) + ".json";
+    handler.saveContactData(file_name, &m_call_data);
 }
 
 void Drawer::discardChange()
 {
-    switch( QMessageBox::question(this, tr("Attention"),
-                tr("Voulez-vous vraiment ANNULER vos changements ?"),
-                QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
-    {
-      case QMessageBox::Yes:
-        qWarning("Yes selected !");
-        break;
-      case QMessageBox::No:
-        return;
-      default:
-        qWarning("Unexpected error occured ! Operation aborted !");
-        break;
-    }
-
+    warning("Voulez-vous vraiment ANNULER vos changements ?");
 
     loadData(*m_data);
-
-    status->setEnabled(false);
-    client_awarness->setVisible(true);
-    client_awarness_edit->setVisible(false);
-
-    name->setFrame(false);
-    name->setReadOnly(true);
-    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    surname->setFrame(false);
-    surname->setReadOnly(true);
-    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    contact->setFrame(false);
-    contact->setReadOnly(true);
-    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    deposit_date->setFrame(false);
-    deposit_date->setReadOnly(true);
-    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    price->setFrame(false);
-    price->setReadOnly(true);
-    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    breakdown->setReadOnly(true);
-    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    complement_info->setReadOnly(true);
-    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    repair->setReadOnly(true);
-    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    comments->setReadOnly(true);
-    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
-
-    modify->setText("Editer");
-    modify->setDisabled(false);
-
-    save->setText("Sauvergarder");
-    save->setDisabled(true);
-
-    discard->setText("Annuler");
-    discard->setDisabled(true);
-
-    update();
+    setReadMode();
 }
 
 void Drawer::setEditable()
-{
+{   
     status->setEnabled(true);
     client_awarness->setVisible(false);
     client_awarness_edit->setVisible(true);
 
+    QString styling = "* { background-color: rgba(255, 255, 255, 1); color: black;}";
+
     name->setFrame(true);
     name->setReadOnly(false);
-    name->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    name->setStyleSheet(styling);
 
     surname->setFrame(true);
     surname->setReadOnly(false);
-    surname->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    surname->setStyleSheet(styling);
 
     contact->setFrame(true);
     contact->setReadOnly(false);
-    contact->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    contact->setStyleSheet(styling);
 
     deposit_date->setFrame(true);
     deposit_date->setReadOnly(false);
-    deposit_date->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    deposit_date->setStyleSheet(styling);
 
     price->setFrame(true);
     price->setReadOnly(false);
-    price->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    price->setStyleSheet(styling);
 
     breakdown->setReadOnly(false);
-    breakdown->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    breakdown->setStyleSheet(styling);
 
     complement_info->setReadOnly(false);
-    complement_info->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    complement_info->setStyleSheet(styling);
 
     repair->setReadOnly(false);
-    repair->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    repair->setStyleSheet(styling);
 
     comments->setReadOnly(false);
-    comments->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    comments->setStyleSheet(styling);
 
     modify->setText("Editer");
     modify->setDisabled(true);
@@ -429,4 +446,71 @@ void Drawer::setEditable()
     discard->setDisabled(false);
 
     update();
+}
+
+void Drawer::setReadMode()
+{
+    status->setEnabled(false);
+    client_awarness->setVisible(true);
+    client_awarness_edit->setVisible(false);
+
+    QString styling  = "* { background-color: rgba(0, 0, 0, 0); color: white;}";
+
+    name->setFrame(false);
+    name->setReadOnly(true);
+    name->setStyleSheet(styling);
+
+    surname->setFrame(false);
+    surname->setReadOnly(true);
+    surname->setStyleSheet(styling);
+
+    contact->setFrame(false);
+    contact->setReadOnly(true);
+    contact->setStyleSheet(styling);
+
+    deposit_date->setFrame(false);
+    deposit_date->setReadOnly(true);
+    deposit_date->setStyleSheet(styling);
+
+    price->setFrame(false);
+    price->setReadOnly(true);
+    price->setStyleSheet(styling);
+
+    breakdown->setReadOnly(true);
+    breakdown->setStyleSheet(styling);
+
+    complement_info->setReadOnly(true);
+    complement_info->setStyleSheet(styling);
+
+    repair->setReadOnly(true);
+    repair->setStyleSheet(styling);
+
+    comments->setReadOnly(true);
+    comments->setStyleSheet(styling);
+
+    modify->setText("Editer");
+    modify->setDisabled(false);
+
+    save->setText("Sauvergarder");
+    save->setDisabled(true);
+
+    discard->setText("Annuler");
+    discard->setDisabled(true);
+
+    update();
+}
+
+bool Drawer::warning(const char msg[])
+{
+    switch( QMessageBox::question(this, tr("Attention"),
+                tr(msg),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
+    {
+      case QMessageBox::Yes:
+        return true;
+      case QMessageBox::No:
+        return false;
+      default:
+        return false;
+    }
 }

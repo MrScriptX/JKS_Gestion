@@ -1,3 +1,6 @@
+//add delete button
+//add call history viewer
+
 #ifndef DRAWER_H
 #define DRAWER_H
 
@@ -14,11 +17,13 @@
 #include <QFile>
 #include <QComboBox>
 #include <QMessageBox>
+#include <QDateEdit>
 
 #include <memory>
 
 #include "dbhandler.h"
 #include "drawerdata.h"
+#include "callviewer.h"
 
 
 enum Status
@@ -52,13 +57,22 @@ private slots:
     void setEditable();
     void saveChange();
     void discardChange();
+    void callClient();
+    void reset();
+    void call_viewer();
 
 private:
+
+    void setReadMode();
+    bool warning(const char msg[]);
+
+    std::unique_ptr<CallViewer> m_viewer;
 
     int m_id;
     bool client_aware;
 
     QLabel* client_awarness;
+    QDateEdit* last_call;
     QComboBox* client_awarness_edit;
     QComboBox* status;
     QLineEdit* name;
@@ -70,11 +84,16 @@ private:
     QTextEdit* repair;
     QTextEdit* comments;
     QLineEdit* price;
+
     QPushButton* modify;
     QPushButton* save;
     QPushButton* discard;
+    QPushButton* called;
+    QPushButton* reset_drawer;
+    QPushButton* view_calls;
 
     DrawerData* m_data;
+    ContactData m_call_data;
 };
 
 #endif // DRAWER_H

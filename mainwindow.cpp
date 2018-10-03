@@ -11,8 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 void MainWindow::setupWindow()
 {
-    m_reset = new QAction;
-    m_reset->setText("reset");
+    createAction();
 
     if(!m_drawers_data.empty())
     {
@@ -34,7 +33,7 @@ void MainWindow::setupWindow()
 
         QString client;
         //temp
-        if(name == "" || surname == "")
+        if(name == "" || name == " ")
         {
            client = "empty";
            status = Status::EMPTY;
@@ -46,16 +45,23 @@ void MainWindow::setupWindow()
         //end temp
 
         QPushButton* drawer = new QPushButton;
+        QFont button_font = drawer->font();
+        button_font.setPointSize(10);
+
+        drawer->setFont(button_font);
         drawer->setText(QString::number(i) + " : " + client);
+        drawer->setFixedHeight(50);
         if(status != Status::EMPTY)
         {
             if(status != Status::READY)
             {
-                drawer->setStyleSheet("background-color: orange;");
+                drawer->setStyleSheet("QPushButton{ background-color: #ff8300;} "
+                                      "QPushButton:hover { background-color: #ffa240;}");
             }
             else
             {
-                drawer->setStyleSheet("background-color: green;");
+                drawer->setStyleSheet("QPushButton{ background-color: #27b600;} "
+                                      "QPushButton:hover { background-color: #5dc840;}");
             }
         }
 
@@ -65,11 +71,11 @@ void MainWindow::setupWindow()
     }
 
     QGridLayout* layout = new QGridLayout;
-    for(uint32_t i = 0; i < m_drawers.size(); i++)
+    for(uint32_t i = 1; i < m_drawers.size(); i++)
     {
-        if(i + 1 < 11)
+        if(i < 11)
         {
-            layout->addWidget(m_drawers.at(i + 1), static_cast<int>(i + 1), 1);
+            layout->addWidget(m_drawers.at(i), static_cast<int>(i), 1);
         }
         else if(i < 21)
         {
@@ -89,6 +95,23 @@ void MainWindow::setupWindow()
     centralWidget->setLayout(layout);
 
     setCentralWidget(centralWidget);
+}
+
+void MainWindow::createAction()
+{
+    m_client_menu = menuBar()->addMenu(tr("Client"));
+
+    m_receipt = menuBar()->addAction(tr("Receipt"));
+    m_receipt->setToolTip(tr("Nouveau recepisse client"));
+    connect(m_receipt, &QAction::triggered, this, &MainWindow::receipt);
+
+    m_clientView = m_client_menu->addAction(tr("Voir clients"));
+    m_clientView->setToolTip(tr("Visualiser la liste des clients enregistrés"));
+    connect(m_clientView, &QAction::triggered, this, &MainWindow::clientViewer);
+
+    m_add_client = m_client_menu->addAction(tr("Ajouter client"));
+    m_add_client->setToolTip(tr("Ajouter de nouveaux client à la base de données"));
+    connect(m_add_client, &QAction::triggered, this, &MainWindow::addClient);
 }
 
 void MainWindow::openDrawer(uint32_t i)
@@ -113,4 +136,82 @@ void MainWindow::updateMain()
     m_drawers.clear();
     setupWindow();
     update();
+}
+
+void MainWindow::receipt()
+{
+    m_receipt_manager.reset();
+    m_receipt_manager = std::make_unique<ReceiptManager>();
+    m_receipt_manager->show();
+}
+
+void MainWindow::clientViewer()
+{
+    m_cManager.reset();
+    m_cManager = std::make_unique<ClientManager>();
+    m_cManager->tableViewer();
+}
+
+void MainWindow::addClient()
+{
+    m_cManager.reset();
+    m_cManager = std::make_unique<ClientManager>();
+
+    QWidget* window = new QWidget;
+
+    QLineEdit* surname = new QLineEdit;
+    surname->setPlaceholderText(tr("Prénom"));
+    QLineEdit* name = new QLineEdit;
+    name->setPlaceholderText(tr("Nom"));
+    QLineEdit* address = new QLineEdit;
+    address->setPlaceholderText(tr("Address"));
+    QLineEdit* zip = new QLineEdit;
+    zip->setPlaceholderText(tr("Code Postal"));
+    QLineEdit* city = new QLineEdit;
+    city->setPlaceholderText(tr("Ville"));
+    QLineEdit* phone = new QLineEdit;
+    phone->setPlaceholderText(tr("Téléphone"));
+    QLineEdit* email = new QLineEdit;
+    email->setPlaceholderText(tr("Courriel"));
+
+    QPushButton* validate = new QPushButton;
+    validate->setText(tr("Validez"));
+    connect(validate, &QPushButton::clicked, this, [this, window, surname, name, address, zip, city, phone, email]{
+        switch( QMessageBox::question(window, tr("Attention"),
+                    tr("Voulez-vous vraiment AJOUTER ce nouveau clients ?"),
+                    QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
+        {
+          case QMessageBox::Yes:
+            break;
+          case QMessageBox::No:
+            return;
+          default:
+            return;
+        }
+
+        client client;
+        client.surname = surname->text();
+        client.name = name->text();
+        client.address = address->text();
+        client.zip = zip->text();
+        client.city = city->text();
+        client.phone = phone->text();
+        client.email = email->text();
+
+        m_cManager->saveClient(client);
+        window->close();
+    });
+
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget(surname);
+    layout->addWidget(name);
+    layout->addWidget(address);
+    layout->addWidget(zip);
+    layout->addWidget(city);
+    layout->addWidget(phone);
+    layout->addWidget(email);
+    layout->addWidget(validate);
+
+    window->setLayout(layout);
+    window->show();
 }
