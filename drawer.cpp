@@ -397,42 +397,44 @@ void Drawer::discardChange()
 }
 
 void Drawer::setEditable()
-{
+{   
     status->setEnabled(true);
     client_awarness->setVisible(false);
     client_awarness_edit->setVisible(true);
 
+    QString styling = "* { background-color: rgba(255, 255, 255, 1); color: black;}";
+
     name->setFrame(true);
     name->setReadOnly(false);
-    name->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    name->setStyleSheet(styling);
 
     surname->setFrame(true);
     surname->setReadOnly(false);
-    surname->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    surname->setStyleSheet(styling);
 
     contact->setFrame(true);
     contact->setReadOnly(false);
-    contact->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    contact->setStyleSheet(styling);
 
     deposit_date->setFrame(true);
     deposit_date->setReadOnly(false);
-    deposit_date->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    deposit_date->setStyleSheet(styling);
 
     price->setFrame(true);
     price->setReadOnly(false);
-    price->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    price->setStyleSheet(styling);
 
     breakdown->setReadOnly(false);
-    breakdown->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    breakdown->setStyleSheet(styling);
 
     complement_info->setReadOnly(false);
-    complement_info->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    complement_info->setStyleSheet(styling);
 
     repair->setReadOnly(false);
-    repair->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    repair->setStyleSheet(styling);
 
     comments->setReadOnly(false);
-    comments->setStyleSheet("* { background-color: rgba(255, 255, 255, 1); }");
+    comments->setStyleSheet(styling);
 
     modify->setText("Editer");
     modify->setDisabled(true);
@@ -452,37 +454,39 @@ void Drawer::setReadMode()
     client_awarness->setVisible(true);
     client_awarness_edit->setVisible(false);
 
+    QString styling  = "* { background-color: rgba(0, 0, 0, 0); color: white;}";
+
     name->setFrame(false);
     name->setReadOnly(true);
-    name->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    name->setStyleSheet(styling);
 
     surname->setFrame(false);
     surname->setReadOnly(true);
-    surname->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    surname->setStyleSheet(styling);
 
     contact->setFrame(false);
     contact->setReadOnly(true);
-    contact->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    contact->setStyleSheet(styling);
 
     deposit_date->setFrame(false);
     deposit_date->setReadOnly(true);
-    deposit_date->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    deposit_date->setStyleSheet(styling);
 
     price->setFrame(false);
     price->setReadOnly(true);
-    price->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    price->setStyleSheet(styling);
 
     breakdown->setReadOnly(true);
-    breakdown->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    breakdown->setStyleSheet(styling);
 
     complement_info->setReadOnly(true);
-    complement_info->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    complement_info->setStyleSheet(styling);
 
     repair->setReadOnly(true);
-    repair->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    repair->setStyleSheet(styling);
 
     comments->setReadOnly(true);
-    comments->setStyleSheet("* { background-color: rgba(0, 0, 0, 0); }");
+    comments->setStyleSheet(styling);
 
     modify->setText("Editer");
     modify->setDisabled(false);
