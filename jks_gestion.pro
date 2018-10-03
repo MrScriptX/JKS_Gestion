@@ -1,5 +1,6 @@
 QT += widgets
 QT += core
+QT += printsupport
 
 SOURCES += \
     main.cpp \
@@ -8,7 +9,9 @@ SOURCES += \
     dbhandler.cpp \
     drawerdata.cpp \
     contactdata.cpp \
-    callviewer.cpp
+    callviewer.cpp \
+    receiptmanager.cpp \
+    Client/clientmanager.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -16,10 +19,13 @@ HEADERS += \
     dbhandler.h \
     drawerdata.h \
     contactdata.h \
-    callviewer.h
+    callviewer.h \
+    receiptmanager.h \
+    Client/clientmanager.h
 
 RESOURCES += \
-    image.qrc
+    image.qrc \
+    file.qrc
 
 RC_FILE = jks_gestion.rc
 

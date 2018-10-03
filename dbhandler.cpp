@@ -180,3 +180,9 @@ void DBHandler::saveContactData(const QString& file_name, ContactData* data)
 
     file.close();
 }
+
+void DBHandler::deleteFileData(const QString& file_name)
+{
+    ContactData data;
+    saveContactData(file_name, &data);//reset file with empty data
+}

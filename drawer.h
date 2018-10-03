@@ -23,6 +23,7 @@
 
 #include "dbhandler.h"
 #include "drawerdata.h"
+#include "callviewer.h"
 
 
 enum Status
@@ -58,11 +59,14 @@ private slots:
     void discardChange();
     void callClient();
     void reset();
+    void call_viewer();
 
 private:
 
     void setReadMode();
-    void warning(const char msg[]);
+    bool warning(const char msg[]);
+
+    std::unique_ptr<CallViewer> m_viewer;
 
     int m_id;
     bool client_aware;
@@ -86,6 +90,7 @@ private:
     QPushButton* discard;
     QPushButton* called;
     QPushButton* reset_drawer;
+    QPushButton* view_calls;
 
     DrawerData* m_data;
     ContactData m_call_data;
