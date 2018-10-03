@@ -105,30 +105,49 @@ void ClientManager::loadClients(std::vector<client>& clients)
 
 void ClientManager::tableViewer()
 {
-    std::vector<client> clients;
-    loadClients(clients);
+    m_clients.clear();
+    loadClients(m_clients);
 
     QTableView* tableView = new QTableView;
     QStandardItemModel* model = new QStandardItemModel;
 
-    for(size_t i = 0; i < clients.size(); i++)
+    std::vector<QStandardItem*> name;
+    std::vector<QStandardItem*> tel;
+    std::vector<QStandardItem*> address;
+    for(size_t i = 0; i < m_clients.size(); i++)
     {
-        QStandardItem* name = new QStandardItem;
-        name->setText(clients[i].surname + " " + clients[i].name);
-        name->setEditable(false);
-        model->setItem(static_cast<int>(i), 0, name);
+        name.push_back(new QStandardItem);
+        tel.push_back(new QStandardItem);
+        address.push_back(new QStandardItem);
 
-        QStandardItem* tel = new QStandardItem;
-        tel->setText(clients[i].phone);
-        tel->setEditable(false);
-        model->setItem(static_cast<int>(i), 1, tel);
+        name[i]->setText(m_clients[i].surname + " " + m_clients[i].name);
+        //name->setEditable(false);
+        model->setItem(static_cast<int>(i), 0, name[i]);
 
-        QStandardItem* address = new QStandardItem;
-        address->setText(clients[i].address + ", " + clients[i].city + " " + clients[i].zip);
-        address->setEditable(false);
-        model->setItem(static_cast<int>(i), 2, address);
+        tel[i]->setText(m_clients[i].phone);
+        //tel->setEditable(false);
+        model->setItem(static_cast<int>(i), 1, tel[i]);
+
+        address[i]->setText(m_clients[i].address + ", " + m_clients[i].city + ", " + m_clients[i].zip);
+        //address->setEditable(false);
+        model->setItem(static_cast<int>(i), 2, address[i]);
     }
 
+    connect(model, &QStandardItemModel::itemChanged, [this, name, tel, address]{
+        for(size_t i = 0; i < m_clients.size(); i++)
+        {
+            QStringList name_list = name[i]->text().split(QRegExp("\\W+"), QString::SkipEmptyParts);
+            QStringList address_list = address[i]->text().split(QRegExp(", "));
+
+            m_clients[i].surname = name_list[0];
+            m_clients[i].name = name_list[1];
+            m_clients[i].phone = tel[i]->text();
+            m_clients[i].address = address_list[0];
+            m_clients[i].city = address_list[1];
+            m_clients[i].zip = address_list[2];
+        }
+        this->saveClients(m_clients);
+    });
 
     tableView->setModel(model);
     tableView->resizeRowsToContents();

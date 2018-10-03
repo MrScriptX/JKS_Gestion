@@ -211,9 +211,9 @@ void ReceiptManager::buildClientReceiptBox()
     date_lt->addWidget(date_depl);
     date_lt->addWidget(date_dep);
 
-    csurnamel = new QLabel(tr("Nom : "));
+    csurnamel = new QLabel(tr("Prénom : "));
     csurname = new QLineEdit;
-    cnamel = new QLabel(tr("Prénom : "));
+    cnamel = new QLabel(tr("Nom : "));
     cname = new QLineEdit;
     QHBoxLayout* name_lt = new QHBoxLayout;
     name_lt->addWidget(csurnamel);

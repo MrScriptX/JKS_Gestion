@@ -52,6 +52,7 @@ public:
     void tableViewer();
     void clientSelector(std::shared_ptr<client> holder);
     void saveClient(client& c);
+    void saveClient(std::vector<client> clients);
 signals:
     void clientSelected();
 
@@ -63,6 +64,7 @@ private:
 
     const QString FILE_NAME = "client.json";
     QListView* m_view;
+    std::vector<client> m_clients;
 };
 
 #endif // CLIENTMANAGER_H
