@@ -14,8 +14,8 @@
 #include <QMenuBar>
 #include <QDebug>
 
-#include "drawer.h"
-#include "dbhandler.h"
+#include "Drawer/drawer.h"
+#include "Drawer/dbhandler.h"
 #include "receiptmanager.h"
 
 class MainWindow : public QMainWindow

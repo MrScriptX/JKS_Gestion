@@ -9,7 +9,7 @@
 #include <memory>
 #include <iostream>
 
-#include "contactdata.h"
+#include "../contactdata.h"
 #include "drawerdata.h"
 
 class DBHandler
