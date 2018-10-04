@@ -6,13 +6,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setMinimumWidth(800);
     setMinimumHeight(800);
 
+    createAction();
     setupWindow();
 }
 
 void MainWindow::setupWindow()
 {
-    createAction();
-
     if(!m_drawers_data.empty())
     {
         m_drawers_data.clear();
